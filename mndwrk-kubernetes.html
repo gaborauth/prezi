@@ -1,0 +1,720 @@
+<html xmlns="http://www.w3.org/1999/html">
+    <head>
+        <title>Bare-metal multi-region Kubernetes - Wildfly cluster</title>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+        <link rel="stylesheet" href="css/reveal.css">
+        <link rel="stylesheet" href="css/theme/beige.css" id="theme">
+        <link rel="stylesheet" href="lib/css/zenburn.css">
+    </head>
+    <body class="is-preload">
+        <div class="reveal">
+            <div style="width: 95%;margin:auto;margin-top: 0.2em;">
+                <img src="https://assets-global.website-files.com/60be3a76e72a7c397e62f49c/60c7b5fa9679d957537bf1d5_mndwrk-logo-color-svg.svg"
+                     style="float:right;width:20%;">
+                <br/>
+                BeerUP &ndash; 2022. augusztus 25.
+            </div>
+            <hr/>
+            <div class="slides">
+                <section>
+                    <section>
+                        <h2>Bare-metal multi-region Kubernetes<br/>Wildfly cluster<br/><strike>szop...</strike> tapasztalatok</h2>
+                        <p><small>Gábor AUTH (<a href="mailto:gabor.auth@iotguru.cloud">gabor.auth@iotguru.cloud</a>)</small></p>
+                    </section>
+                    <section>
+                        <h3>Agenda</h3>
+                        <p class="fragment roll-in">1. Alapfogalmak</p>
+                        <p class="fragment roll-in">1.1. Kubernetes</p>
+                        <p class="fragment roll-in">1.2. Bare-metal vs virtual machine</p>
+                        <p class="fragment roll-in">1.3. On-premise vs cloud</p>
+                        <p class="fragment roll-in">1.4. Management tools</p>
+                        <p class="fragment roll-in">1.5. Multi-region</p>
+                    </section>
+                    <section>
+                        <h3>Agenda</h3>
+                        <p class="fragment roll-in">2. Wildfly</p>
+                    </section>
+                    <section>
+                        <h3>Agenda</h3>
+                        <p class="fragment roll-in">3. A feladat!</p>
+                        <p class="fragment roll-in">3.1. Bare-metal</p>
+                        <p class="fragment roll-in">3.2. Storage</p>
+                        <p class="fragment roll-in">3.3. Networking</p>
+                        <p class="fragment roll-in">3.4. Monitoring</p>
+                        <p class="fragment roll-in">3.5. Load-balancing</p>
+                    </section>
+                    <section>
+                        <h3>Agenda</h3>
+                        <p class="fragment roll-in">4. Tapasztalatok és összegzés</p>
+                        <p class="fragment roll-in">5. Kérdések és válaszok</p>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h3>Mi a Kubernetes?</h3>
+                        <p class="fragment roll-in">
+                            <a href="https://kubernetes.io/">https://kubernetes.io/</a>
+                        </p>
+                        <p class="fragment roll-in">Google hobby-projekt</p>
+                        <p class="fragment roll-in">Nyílt forrású 2014 óta</p>
+                        <p class="fragment roll-in">2020-ig lassú felfutás, azóta pörgés</p>
+                        <p class="fragment roll-in">A neve “kormányos” görögül</p>
+                        <p class="fragment roll-in">Konténer-menedzser</p>
+                        <p class="fragment roll-in">Deklaratív konfiguráció</p>
+                    </section>
+                    <section>
+                        <h3>Buzzwords</h3>
+                        <p class="fragment roll-in">Service discovery & orchestration</p>
+                        <p class="fragment roll-in">Automated rollout and rollback</p>
+                        <p class="fragment roll-in">Automatic resource packing</p>
+                        <p class="fragment roll-in">Configuration management</p>
+                        <p class="fragment roll-in">Health checks & rules</p>
+                        <p class="fragment roll-in">Load balancing</p>
+                        <p class="fragment roll-in">Self-healing</p>
+                    </section>
+                    <section>
+                        <h3>Hogy épül fel a Kubernetes?</h3>
+
+                        <div class="fragment roll-in">
+                            <img src="https://d33wubrfki0l68.cloudfront.net/2475489eaf20163ec0f54ddc1d92aa8d4c87c96b/e7c81/images/docs/components-of-kubernetes.svg"></img>
+                        </div>
+                    </section>
+
+                    <section>
+                        <h3>Bare-metal vs virtual machine</h3>
+
+                        <p class="fragment roll-in"><strong>Bare-metal</strong></p>
+                        <p class="fragment roll-in">a teljes fizikai gépet értjük alatta</p>
+
+                        <p class="fragment roll-in"><strong>Virtual machine</strong></p>
+                        <p class="fragment roll-in">a fizikai gépen futó virtuális gép</p>
+                    </section>
+                    <section>
+                        <h3>Bare-metal</h3>
+
+                        <p class="fragment roll-in"><strong>Pros</strong></p>
+                        <p class="fragment roll-in">nagyobb teljesítmény, közvetlen hardver elérés</p>
+                        <p class="fragment roll-in">nagyobb biztonság, jobban védhető, tamper védelem, VPN</p>
+                        <p class="fragment roll-in">tudunk rajta virtuális gépet futtatni, ha szükséges</p>
+                    </section>
+                    <section>
+                        <h3>Bare-metal</h3>
+
+                        <p class="fragment roll-in"><strong>Cons</strong></p>
+                        <p class="fragment roll-in">nagyobb beruházást igényel</p>
+                        <p class="fragment roll-in">méretgazdaságossági problémák</p>
+                        <p class="fragment roll-in">opcionálisan helyszíni munkaerő</p>
+                        <p class="fragment roll-in">nehezebben és drágábban karbantartható</p>
+                        <p class="fragment roll-in">nagyobb üzemeltetési kockázat</p>
+                    </section>
+                    <section>
+                        <h3>Virtual machine</h3>
+
+                        <p class="fragment roll-in"><strong>Pros</strong></p>
+                        <p class="fragment roll-in">olcsóbb, skálázhatóbb</p>
+                        <p class="fragment roll-in">nagyobb rendelkezésre állás</p>
+                        <p class="fragment roll-in">kiszervezett fizikai üzemeltetés</p>
+                        <p class="fragment roll-in">a legtöbb probléma valaki más problémája</p>
+                    </section>
+                    <section>
+                        <h3>Virtual machine</h3>
+
+                        <p class="fragment roll-in"><strong>Cons</strong></p>
+                        <p class="fragment roll-in">teljes kontroll hiánya</p>
+                        <p class="fragment roll-in">biztonsági aggályok</p>
+                        <p class="fragment roll-in">közös erőforrások</p>
+                        <p class="fragment roll-in">overbooking</p>
+                    </section>
+
+                    <section>
+                        <h3>On-premise vs cloud</h3>
+
+                        <p class="fragment roll-in"><strong>On-premise</strong></p>
+                        <p class="fragment roll-in">saját magunk üzemeltetjük, maximum IaaS</p>
+
+                        <p class="fragment roll-in"><strong>Cloud</strong></p>
+                        <p class="fragment roll-in">megvesszük a szolgáltatást, PaaS vagy SaaS</p>
+                    </section>
+                    <section>
+                        <h3>On-premise</h3>
+
+                        <p class="fragment roll-in"><strong>Pros</strong></p>
+                        <p class="fragment roll-in">kontroll a teljes stack felett</p>
+                        <p class="fragment roll-in">nagyobb biztonság (vagy biztonságérzet)</p>
+                    </section>
+                    <section>
+                        <h3>On-premise</h3>
+
+                        <p class="fragment roll-in"><strong>Cons</strong></p>
+                        <p class="fragment roll-in">nagyobb beruházást igényel</p>
+                        <p class="fragment roll-in">méretgazdaságossági problémák</p>
+                        <p class="fragment roll-in">opcionálisan helyszíni munkaerő</p>
+                        <p class="fragment roll-in">nehezebben és drágábban karbantartható</p>
+                        <p class="fragment roll-in">nagyobb üzemeltetési kockázat</p>
+                    </section>
+                    <section>
+                        <h3>Cloud</h3>
+
+                        <p class="fragment roll-in"><strong>Valaki más számítógépe?</strong></p>
+                        <p class="fragment roll-in"><strong>Igen.</strong></p>
+
+                        <p class="fragment roll-in">a taxi valaki más autója,</p>
+                        <p class="fragment roll-in">a hotel valaki más háza,</p>
+                        <p class="fragment roll-in">az étterem valaki más konyhája,</p>
+                        <p class="fragment roll-in">a cloud valaki más számítógépe...</p>
+                        <p class="fragment roll-in">...és szolgáltatás csomagja</p>
+                    </section>
+                    <section>
+                        <h3>Cloud</h3>
+
+                        <p class="fragment roll-in"><strong>Pros</strong></p>
+                        <p class="fragment roll-in">pay-as-you-go modell</p>
+                        <p class="fragment roll-in">könnyen az igényekhez szabható, skálázható</p>
+                        <p class="fragment roll-in">fekete-doboz számunkra</p>
+                    </section>
+                    <section>
+                        <h3>Cloud</h3>
+
+                        <p class="fragment roll-in"><strong>Cons</strong></p>
+                        <p class="fragment roll-in">fekete-doboz számunkra</p>
+                        <p class="fragment roll-in">biztonsági aggályok</p>
+                        <p class="fragment roll-in">üzemeltetési aggályok</p>
+                        <p class="fragment roll-in">teljes kontrollvesztés</p>
+                    </section>
+
+                    <section>
+                        <h3>Kubernetes management tools</h3>
+
+                        <p class="fragment roll-in"><strong>The Hard Way</strong></p>
+                        <p class="fragment roll-in">kubectl, kubeadm</p>
+                        <p class="fragment roll-in">CLI telepítések</p>
+                        <p class="fragment roll-in">teljes kontroll</p>
+                    </section>
+                    <section>
+                        <h3>Kubernetes management tools</h3>
+
+                        <p class="fragment roll-in"><strong>GUI/Web based management tools</strong></p>
+                        <p class="fragment roll-in">K9s</p>
+                        <p class="fragment roll-in">Rancher</p>
+                        <p class="fragment roll-in">Helm</p>
+                        <p class="fragment roll-in">KubeSpray</p>
+                        <p class="fragment roll-in">...</p>
+                    </section>
+
+                    <section>
+                        <h3>Multi-region</h3>
+
+                        <p class="fragment roll-in">több régióban futó adatközpontok</p>
+                        <p class="fragment roll-in">adatokat cserélnek egymással privát hálózaton</p>
+                        <p class="fragment roll-in">replikálják egymás adatát</p>
+                        <p class="fragment roll-in">load balancing és fail-over támogatás</p>
+                    </section>
+
+                    <section>
+                        <h3>Multi-region</h3>
+
+                        <table style="border:1px;">
+                            <tr>
+                                <td class="fragment roll-in"><img style="height:100%;"
+                                                                  src="https://d33wubrfki0l68.cloudfront.net/2475489eaf20163ec0f54ddc1d92aa8d4c87c96b/e7c81/images/docs/components-of-kubernetes.svg">
+                                </td>
+                                <td class="fragment roll-in"><img style="height:100%;"
+                                                                  src="https://d33wubrfki0l68.cloudfront.net/2475489eaf20163ec0f54ddc1d92aa8d4c87c96b/e7c81/images/docs/components-of-kubernetes.svg">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="fragment roll-in"><img style="height:100%;"
+                                                                  src="https://d33wubrfki0l68.cloudfront.net/2475489eaf20163ec0f54ddc1d92aa8d4c87c96b/e7c81/images/docs/components-of-kubernetes.svg">
+                                </td>
+                                <td class="fragment roll-in"><img style="height:100%;"
+                                                                  src="https://d33wubrfki0l68.cloudfront.net/2475489eaf20163ec0f54ddc1d92aa8d4c87c96b/e7c81/images/docs/components-of-kubernetes.svg">
+                                </td>
+                            </tr>
+                        </table>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h1>Wildfly</h1>
+                        <p class="fragment roll-in">
+                            <a href="https://wildfly.org/">https://wildfly.org/</a>
+                        </p>
+                        <blockquote class="fragment roll-in">
+                            WildFly is a flexible, lightweight, managed
+                            application runtime that helps you build <strong>amazing</strong>
+                            applications.
+                        </blockquote>
+                    </section>
+
+                    <section>
+                        <h3>Wildfly</h3>
+                        <ul>
+                            <li class="fragment roll-in">Full featured Java EE 8/9 container.</li>
+                            <li class="fragment roll-in">Unparalleled Speed</li>
+                            <li class="fragment roll-in">Exceptionally Lightweight</li>
+                            <li class="fragment roll-in">Powerful Administration</li>
+                            <li class="fragment roll-in">Supports Latest Standards and Technology</li>
+                            <li class="fragment roll-in">Modular Java</li>
+                        </ul>
+                    </section>
+
+                    <section>
+                        <h3>Wildfly + Kubernetes</h3>
+                        <p class="fragment roll-in">Két jó barát</p>
+                        <ul>
+                            <li class="fragment roll-in">KUBE_PING</li>
+                            <li class="fragment roll-in">TCP_PING</li>
+                            <li class="fragment roll-in">Replication</li>
+                            <li class="fragment roll-in">Fail-safe, self-healing</li>
+                        </ul>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h3>A feladat!</h3>
+
+                        <p class="fragment roll-in">meglévő fizikai szerverek</p>
+                        <p class="fragment roll-in">meglévő adatközpontokban</p>
+                        <p class="fragment roll-in">tanuljuk meg a Kubernetes mélységeit</p>
+                        <p class="fragment roll-in">két magyar és egy osztrák adatközpontban</p>
+                    </section>
+                    <section>
+                        <h3>A feladat!</h3>
+
+                        <p class="fragment roll-in">Bare-metal</p>
+                        <p class="fragment roll-in">On-premise</p>
+                        <p class="fragment roll-in">The Hard Way</p>
+                        <p class="fragment roll-in">Multi-region</p>
+                    </section>
+                    <section>
+                        <h3>Bontsuk le rétegekre!</h3>
+
+                        <p class="fragment roll-in">Bare-metal szerver</p>
+                        <p class="fragment roll-in">Storage</p>
+                        <p class="fragment roll-in">Networking</p>
+                        <p class="fragment roll-in">Containers</p>
+                        <p class="fragment roll-in">Load-balancing</p>
+                    </section>
+                    <section>
+                        <h3>Bare-metal szerver</h3>
+
+                        <p class="fragment roll-in">Ez alapvetően triviális, ha megvan hozzá az üzemeltetői tudás:</p>
+                        <p class="fragment roll-in">Fizikai szerver</p>
+                        <p class="fragment roll-in">Linux</p>
+                        <p class="fragment roll-in">OpenVPN private network</p>
+                        <p class="fragment roll-in">Tamper kapcsolók</p>
+                        <p class="fragment roll-in">Szerver hosting</p>
+                    </section>
+                    <section>
+                        <h3>Storage</h3>
+
+                        <p class="fragment roll-in">Kell:</p>
+                        <p class="fragment roll-in">host local storage (SSD & HDD)</p>
+                        <p class="fragment roll-in">cluster wide storage (local storage alapján)</p>
+                    </section>
+                    <section>
+                        <h3>Storage - GlusterFS bricks</h3>
+
+                        <pre class="fragment roll-in"><code>
+# gluster volume create k8s-dc01 replica 2 dc01-k8s01:/gluster/dc01 ⏎
+    dc01-k8s02:/gluster/dc01 dc01-k8s03:/gluster/dc01 dc01-k8s04:/gluster/dc01
+                        </code></pre>
+                        <pre class="fragment roll-in"><code>
+# gluster volume start k8s-dc01
+                        </code></pre>
+
+                        <pre class="fragment roll-in"><code>
+# gluster volume status k8s-dc01
+Status of volume: k8s-dc01
+Gluster process                  TCP Port   RDMA Port Online  Pid
+---------------------------------------------------------------------
+Brick dc01-k8s01:/gluster/dc01   49152      0         Y       2416
+Brick dc01-k8s02:/gluster/dc01   49152      0         Y       2285
+Brick dc01-k8s03:/gluster/dc01   49152      0         Y       2257
+Brick dc01-k8s04:/gluster/dc01   49152      0         Y       2426
+                        </code></pre>
+                    </section>
+                    <section>
+                        <h3>Storage - Kubernetes endpoint</h3>
+
+                        <pre class="fragment roll-in"><code>
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: glusterfs-dc01
+  labels:
+    storage.k8s.io/name: glusterfs
+subsets:
+  - addresses:
+    - ip: 10.0.0.1
+      hostname: dc01-k8s01
+    - ip: 10.0.0.2
+      hostname: dc01-k8s02
+    - ip: 10.0.0.3
+      hostname: dc01-k8s03
+    - ip: 10.0.0.4
+      hostname: dc01-k8s04
+                        </code></pre>
+                    </section>
+                    <section>
+                        <h3>Storage - Persistent volume</h3>
+
+                        <pre class="fragment roll-in"><code>
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: dc01-pv
+  labels:
+    name: dc01-pv
+spec:
+  accessModes:
+    - ReadWriteOnce
+    - ReadOnlyMany
+    - ReadWriteMany
+  capacity:
+    storage: 800Gi
+  persistentVolumeReclaimPolicy: Retain
+  volumeMode: Filesystem
+  glusterfs:
+    endpoints: glusterfs-dc01
+    path: k8s-dc01
+    readOnly: no
+                        </code></pre>
+                    </section>
+                    <section>
+                        <h3>Storage - PersistentVolumeClaim</h3>
+
+                        <pre class="fragment roll-in"><code>
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: dc01-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 800Gi
+  selector:
+    matchLabels:
+      name: dc01-pv
+                        </code></pre>
+                    </section>
+                    <section>
+                        <h3>Storage - Volumes</h3>
+
+                        <pre class="fragment roll-in"><code>
+      volumes:
+        - name: dc01-pvc
+          persistentVolumeClaim:
+            claimName: dc01-pvc
+        - name: local-storage
+          hostPath:
+            path: /k8s-host-data/wildfly/
+            type: DirectoryOrCreate
+                        </code></pre>
+                    </section>
+                    <section>
+                        <h3>Storage - Volume mounts</h3>
+
+                        <pre class="fragment roll-in"><code>
+        volumeMounts:
+          - mountPath: /opt/jboss/wildfly/standalone/deployments/
+            name: dc01-pvc
+            subPathExpr: $(POD_NAME)/deployments/
+          - name: local-storage
+            mountPath: /opt/jboss/wildfly/standalone/data/
+            subPathExpr: $(NODE_NAME)/data/
+          - name: local-storage
+            mountPath: /opt/jboss/wildfly/standalone/log/
+            subPathExpr: $(NODE_NAME)/log/
+                        </code></pre>
+                    </section>
+
+                    <section>
+                        <h3>Networking</h3>
+
+                        <p class="fragment roll-in">Érdemes beállítani OpenVPN alapú privát hálózatot,
+                            hogy ne a nagyvilágon keresztül kommunikáljanak a gépeink.</p>
+
+                        <p class="fragment roll-in">Kell még egy ún. Container Network Interface plugin,
+                            ezen keresztül kommunikálnak a Kubernetes node-ok.</p>
+                    </section>
+
+                    <section>
+                        <h3>Networking</h3>
+
+                        <p class="fragment roll-in">Van több lehetőségünk:</p>
+                        <p class="fragment roll-in">Weave</p>
+                        <p class="fragment roll-in">Flannel</p>
+                        <p class="fragment roll-in">Calico</p>
+                        <p class="fragment roll-in">...</p>
+                    </section>
+                    <section>
+                        <h3>Networking - Calico</h3>
+
+                        <p class="fragment roll-in">Én a Calico-t javaslom, kb. zero-administration:</p>
+
+                        <pre class="fragment roll-in"><code>
+# kubectl create -f https://docs.projectcalico.org/manifests/tigera-operator.yaml
+# kubectl create -f https://docs.projectcalico.org/manifests/custom-resources.yaml
+# calicoctl-3.22.1 get ipPool -owide
+NAME                  CIDR             NAT    IPIPMODE   VXLANMODE   DISABLED   DISABLEBGPEXPORT   SELECTOR
+default-ipv4-ippool   192.168.0.0/16   true   Never      Always      false      false              all()
+                        </code></pre>
+
+                        <p class="fragment roll-in">És készen is vagyunk. :)</p>
+                    </section>
+                    <section>
+                        <h3>Containers</h3>
+
+                        <div class="fragment roll-in">
+                            <img src="https://media.makeameme.org/created/containers-containers-everywhere.jpg">
+                        </div>
+                    </section>
+                    <section>
+                        <h3>Containers</h3>
+
+                        <p class="fragment roll-in">Csak konténerek vannak: bármit is akarunk futtatni,
+                            azt konténerbe kell tennünk.</p>
+                        <p class="fragment roll-in">Rákényszerít a szabványos működésre...</p>
+                        <p class="fragment roll-in">...mint a borotváló-automata!</p>
+                    </section>
+                    <section>
+                        <h3>Statefulset</h3>
+
+                        <pre class="fragment roll-in"><code>
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: wildfly-dc01
+  labels:
+    app: wildfly-dc01
+                        </code></pre>
+                    </section>
+                    <section>
+                        <h3>Statefulset</h3>
+
+                        <pre class="fragment roll-in"><code>
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: wildfly-dc01
+  serviceName: "wildfly-dc01"
+  template:
+    metadata:
+      labels:
+        app: wildfly-dc01
+    spec:
+      ...
+                        </code></pre>
+                    </section>
+                    <section>
+                        <h3>Statefulset</h3>
+
+                        <pre class="fragment roll-in"><code>
+      containers:
+      - name: wildfly-dc01
+        image: quay.io/wildfly/wildfly:26.0.1.Final
+        imagePullPolicy: Always
+        ports:
+        - name: jgroups-tcp
+          containerPort: 7600
+        - name: web
+          containerPort: 8080
+                        </code></pre>
+                    </section>
+                    <section>
+                        <h3>Statefulset</h3>
+
+                        <pre class="fragment roll-in"><code>
+        env:
+          - name: INITIAL_HOSTS
+            value: "wildfly-dc01-0.wildfly-dc01.svc.cluster.local[7600],wildfly-dc01-1.wildfly-dc01.svc.cluster.local[7600]"
+          - ...
+                        </code></pre>
+                    </section>
+                    <section>
+                        <h3>Service</h3>
+
+                        <pre class="fragment roll-in"><code>
+apiVersion: v1
+kind: Service
+metadata:
+  name: wildfly-dc01
+spec:
+  type: NodePort
+  selector:
+    app: wildfly-dc01
+  ports:
+  - name: web
+    port: 8080
+    targetPort: 8080
+                        </code></pre>
+                    </section>
+                    <section>
+                        <h3>Fussunk neki</h3>
+
+                        <pre class="fragment roll-in"><code>
+# kubectl apply -f wildfly-dc01.yaml
+statefulset.apps/wildfly-dc01 configured
+service/wildfly-dc01 configured
+                        </code></pre>
+                    </section>
+                    <section>
+                        <h3>Fussunk neki</h3>
+
+                        <pre class="fragment roll-in"><code>
+# kubectl get pods -owide
+NAME                  READY   STATUS    RESTARTS       AGE     IP                NODE                        NOMINATED NODE   READINESS GATES
+wildfly-prod-dc01-0   1/1     Running   0              4m      192.168.37.11     dc01-krts02                 &lt;none>           &lt;none>
+wildfly-prod-dc01-1   1/1     Running   0              2m      192.168.111.93    dc01-krts04                 &lt;none>           &lt;none>
+                        </code></pre>
+                        <pre class="fragment roll-in"><code>
+# kubectl get services -owide
+NAME                TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)             AGE     SELECTOR
+glusterfs-dc01      ClusterIP   10.105.185.114   &lt;none>                            50m    &lt;none>
+wildfly-dc01        NodePort    10.108.166.114   &lt;none>        8080:32187/TCP      2m     app=wildfly-dc01
+                        </code></pre>
+                    </section>
+
+                    <section>
+                        <h3>Load-balancing</h3>
+
+                        <p class="fragment roll-in">EXTERNAL-IP: &lt;none&gt;</p>
+                        <p class="fragment roll-in">Nincs bare-metal load-balancer :(</p>
+                        <p class="fragment roll-in">Oké, van: MetalLB project. :)</p>
+                        <p class="fragment roll-in">Nincs: beta.</p>
+                        <p class="fragment roll-in">Félig van: Ingress!</p>
+                    </section>
+
+                    <section>
+                        <h3>Ingress-nginx</h3>
+
+                        <p class="fragment roll-in">Egyszerű telepítés:</p>
+                        <pre class="fragment roll-in"><code># kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/baremetal/deploy.yaml
+                        </code></pre>
+                        <pre class="fragment roll-in"><code># kubectl get pods -n ingress-nginx
+NAME                                        READY   STATUS                   RESTARTS        AGE
+ingress-nginx-controller-5b6d755b5f-4vzl4   1/1     Running                  0               1m
+                        </code></pre>
+                        <pre class="fragment roll-in"><code># kubectl get services -n ingress-nginx
+NAME                                 TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)                      AGE
+ingress-nginx-controller             LoadBalancer   10.98.121.41     &lt;pending>     80:32028/TCP,443:32726/TCP   1m
+ingress-nginx-controller-admission   ClusterIP      10.108.183.145   &lt;none>        443/TCP                      1m
+                        </code></pre>
+                    </section>
+                    <section>
+                        <h3>Ingress-nginx</h3>
+
+                        <pre class="fragment roll-in"><code>
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: wildfly-dc01-api-ingress
+  annotations:
+    kubernets.io/ingress.class: "nginx"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: "api-dc01.domain.tld"
+    http:
+      paths:
+      - pathType: Prefix
+        path: /(.*)
+        backend:
+          service:
+            name: wildfly-dc01
+            port:
+              number: 8080
+                        </code></pre>
+                    </section>
+                    <section>
+                        <h3>Ingress-nginx</h3>
+
+                        <pre class="fragment roll-in"><code>
+# kubectl get ingress
+NAME                               CLASS   HOSTS                                    ADDRESS   PORTS   AGE
+wildfly-dc01-api-ingress           nginx   api-dc01.domain.tld                                80      2m
+                        </code></pre>
+                    </section>
+                    <section>
+                        <h3>Ingress-nginx</h3>
+
+                        <p class="fragment roll-in">Mindebből és mindenből három:</p>
+                        <pre class="fragment roll-in"><code>
+# kubectl get ingress
+NAME                               CLASS   HOSTS                                    ADDRESS   PORTS   AGE
+wildfly-dc01-api-ingress           nginx   api-dc01.domain.tld                                80      2m
+wildfly-dc02-api-ingress           nginx   api-dc02.domain.tld                                80      2m
+wildfly-dc03-api-ingress           nginx   api-dc03.domain.tld                                80      2m
+                        </code></pre>
+                    </section>
+                    <section>
+                        <h3>Ingress-nginx</h3>
+
+                        <p class="fragment roll-in">nginx ClusterIP (fix 10.98.121.41)</p>
+                        <p class="fragment roll-in">egy dinamikusan módosuló nginx proxy</p>
+                        <p class="fragment roll-in">routing: Calico</p>
+                        <p class="fragment roll-in">port-forward: Linux iptables</p>
+                        <p class="fragment roll-in">load-balancer: ISP router</p>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h3>Tapasztalatok és összegzés</h3>
+                    </section>
+                    <section>
+                        <h3>Kérdések és válaszok</h3>
+                    </section>
+                </section>
+
+            </div>
+        </div>
+        <script src="lib/js/head.min.js"></script>
+        <script src="js/reveal.js"></script>
+
+        <script>
+            Reveal.initialize({
+                controls: true,
+                progress: true,
+                history: true,
+                center: true,
+                slideNumber: true,
+                transition: 'zoom',
+                dependencies: [
+                    {
+                        src: 'lib/js/classList.js', condition: function () {
+                            return !document.body.classList;
+                        }
+                    },
+                    {
+                        src: 'plugin/markdown/marked.js', condition: function () {
+                            return !!document.querySelector('[data-markdown]');
+                        }
+                    },
+                    {
+                        src: 'plugin/markdown/markdown.js', condition: function () {
+                            return !!document.querySelector('[data-markdown]');
+                        }
+                    },
+                    {
+                        src: 'plugin/highlight/highlight.js', async: true, condition: function () {
+                            return !!document.querySelector('pre code');
+                        }, callback: function () {
+                            hljs.initHighlightingOnLoad();
+                        }
+                    },
+                    {src: 'plugin/zoom-js/zoom.js', async: true},
+                    {src: 'plugin/notes/notes.js', async: true}
+                ]
+            });
+        </script>
+    </body>
+</html>
