@@ -86,10 +86,10 @@
                         <h3>Bare-metal vs virtual machine</h3>
 
                         <p class="fragment roll-in"><strong>Bare-metal</strong></p>
-                        <p class="fragment roll-in">a teljes fizikai gépet értjük alatta</p>
+                        <p class="fragment roll-in">teljes fizikai gép</p>
 
                         <p class="fragment roll-in"><strong>Virtual machine</strong></p>
-                        <p class="fragment roll-in">a fizikai gépen futó virtuális gép</p>
+                        <p class="fragment roll-in">fizikai gépen futó virtuális gép</p>
                     </section>
                     <section>
                         <h3>Bare-metal</h3>
@@ -158,13 +158,13 @@
                         <h3>Cloud</h3>
 
                         <p class="fragment roll-in"><strong>Valaki más számítógépe?</strong></p>
-                        <p class="fragment roll-in"><strong>Igen.</strong></p>
+                        <p class="fragment roll-in"><strong>Igen,</strong></p>
 
                         <p class="fragment roll-in">a taxi valaki más autója,</p>
                         <p class="fragment roll-in">a hotel valaki más háza,</p>
                         <p class="fragment roll-in">az étterem valaki más konyhája,</p>
                         <p class="fragment roll-in">a cloud valaki más számítógépe...</p>
-                        <p class="fragment roll-in">...és szolgáltatás csomagja</p>
+                        <p class="fragment roll-in">...és szolgáltatás csomagja.</p>
                     </section>
                     <section>
                         <h3>Cloud</h3>
@@ -191,6 +191,7 @@
                         <p class="fragment roll-in">kubectl, kubeadm</p>
                         <p class="fragment roll-in">CLI telepítések</p>
                         <p class="fragment roll-in">teljes kontroll</p>
+                        <p class="fragment roll-in">...</p>
                     </section>
                     <section>
                         <h3>Kubernetes management tools</h3>
@@ -228,9 +229,7 @@
                                 <td class="fragment roll-in"><img style="height:100%;"
                                                                   src="https://d33wubrfki0l68.cloudfront.net/2475489eaf20163ec0f54ddc1d92aa8d4c87c96b/e7c81/images/docs/components-of-kubernetes.svg">
                                 </td>
-                                <td class="fragment roll-in"><img style="height:100%;"
-                                                                  src="https://d33wubrfki0l68.cloudfront.net/2475489eaf20163ec0f54ddc1d92aa8d4c87c96b/e7c81/images/docs/components-of-kubernetes.svg">
-                                </td>
+                                <td></td>
                             </tr>
                         </table>
                     </section>
@@ -250,7 +249,7 @@
                     </section>
 
                     <section>
-                        <h3>Wildfly</h3>
+                        <h3>Buzzwords</h3>
                         <ul>
                             <li class="fragment roll-in">Full featured Java EE 8/9 container.</li>
                             <li class="fragment roll-in">Unparalleled Speed</li>
@@ -263,12 +262,12 @@
 
                     <section>
                         <h3>Wildfly + Kubernetes</h3>
-                        <p class="fragment roll-in">Két jó barát</p>
+                        <p class="fragment roll-in">Két jó barát!</p>
                         <ul>
+                            <li class="fragment roll-in">Container-ready</li>
                             <li class="fragment roll-in">KUBE_PING</li>
-                            <li class="fragment roll-in">TCP_PING</li>
-                            <li class="fragment roll-in">Replication</li>
-                            <li class="fragment roll-in">Fail-safe, self-healing</li>
+                            <li class="fragment roll-in">Self-healing</li>
+                            <li class="fragment roll-in">Fail-safe</li>
                         </ul>
                     </section>
                 </section>
@@ -277,10 +276,11 @@
                     <section>
                         <h3>A feladat!</h3>
 
+                        <p class="fragment roll-in">céges megbízás</p>
                         <p class="fragment roll-in">meglévő fizikai szerverek</p>
                         <p class="fragment roll-in">meglévő adatközpontokban</p>
                         <p class="fragment roll-in">tanuljuk meg a Kubernetes mélységeit</p>
-                        <p class="fragment roll-in">két magyar és egy osztrák adatközpontban</p>
+                        <p class="fragment roll-in">két magyar és egy osztrák adatközpont</p>
                     </section>
                     <section>
                         <h3>A feladat!</h3>
@@ -302,28 +302,28 @@
                     <section>
                         <h3>Bare-metal szerver</h3>
 
-                        <p class="fragment roll-in">Ez alapvetően triviális, ha megvan hozzá az üzemeltetői tudás:</p>
+                        <p class="fragment roll-in">Ez alapvetően triviális volt:</p>
                         <p class="fragment roll-in">Fizikai szerver</p>
                         <p class="fragment roll-in">Linux</p>
                         <p class="fragment roll-in">OpenVPN private network</p>
                         <p class="fragment roll-in">Tamper kapcsolók</p>
                         <p class="fragment roll-in">Szerver hosting</p>
+                        <p class="fragment roll-in">Meglévő kompetencia</p>
                     </section>
                     <section>
                         <h3>Storage</h3>
 
                         <p class="fragment roll-in">Kell:</p>
-                        <p class="fragment roll-in">host local storage (SSD & HDD)</p>
-                        <p class="fragment roll-in">cluster wide storage (local storage alapján)</p>
+                        <p class="fragment roll-in">local storage (SSD & HDD)</p>
+                        <p class="fragment roll-in">cluster wide storage (network)</p>
                     </section>
                     <section>
                         <h3>Storage - GlusterFS bricks</h3>
 
                         <pre class="fragment roll-in"><code>
 # gluster volume create k8s-dc01 replica 2 dc01-k8s01:/gluster/dc01 ⏎
-    dc01-k8s02:/gluster/dc01 dc01-k8s03:/gluster/dc01 dc01-k8s04:/gluster/dc01
-                        </code></pre>
-                        <pre class="fragment roll-in"><code>
+        dc01-k8s02:/gluster/dc01 dc01-k8s03:/gluster/dc01  ⏎
+        dc01-k8s04:/gluster/dc01
 # gluster volume start k8s-dc01
                         </code></pre>
 
@@ -348,6 +348,12 @@ metadata:
   name: glusterfs-dc01
   labels:
     storage.k8s.io/name: glusterfs
+                        </code></pre>
+                    </section>
+                    <section>
+                        <h3>Storage - Kubernetes endpoint</h3>
+
+                        <pre class="fragment roll-in"><code>
 subsets:
   - addresses:
     - ip: 10.0.0.1
@@ -370,6 +376,12 @@ metadata:
   name: dc01-pv
   labels:
     name: dc01-pv
+                        </code></pre>
+                    </section>
+                    <section>
+                        <h3>Storage - Persistent volume</h3>
+
+                        <pre class="fragment roll-in"><code>
 spec:
   accessModes:
     - ReadWriteOnce
@@ -535,7 +547,8 @@ spec:
                         <pre class="fragment roll-in"><code>
         env:
           - name: INITIAL_HOSTS
-            value: "wildfly-dc01-0.wildfly-dc01.svc.cluster.local[7600],wildfly-dc01-1.wildfly-dc01.svc.cluster.local[7600]"
+            value: "wildfly-dc01-0.wildfly-dc01.svc.cluster.local[7600], ⏎
+                    wildfly-dc01-1.wildfly-dc01.svc.cluster.local[7600]"
           - ...
                         </code></pre>
                     </section>
@@ -572,14 +585,35 @@ service/wildfly-dc01 configured
                         <pre class="fragment roll-in"><code>
 # kubectl get pods -owide
 NAME                  READY   STATUS    RESTARTS       AGE     IP                NODE                        NOMINATED NODE   READINESS GATES
-wildfly-prod-dc01-0   1/1     Running   0              4m      192.168.37.11     dc01-krts02                 &lt;none>           &lt;none>
-wildfly-prod-dc01-1   1/1     Running   0              2m      192.168.111.93    dc01-krts04                 &lt;none>           &lt;none>
+wildfly-dc01-0        1/1     Running   0              4m      192.168.37.11     dc01-krts02                 &lt;none>           &lt;none>
+wildfly-dc01-1        1/1     Running   0              2m      192.168.111.93    dc01-krts04                 &lt;none>           &lt;none>
                         </code></pre>
+
+                        <pre class="fragment roll-in"><code>
+# curl 192.168.37.11:8080
+                            ...
+        &lt;h1>Welcome to WildFly&lt;/h1>
+                            ...
+        &lt;h3>Your WildFly instance is running.&lt;/h3>
+                            ...
+                        </code></pre>
+                    </section>
+                    <section>
+                        <h3>Fussunk neki</h3>
+
                         <pre class="fragment roll-in"><code>
 # kubectl get services -owide
 NAME                TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)             AGE     SELECTOR
 glusterfs-dc01      ClusterIP   10.105.185.114   &lt;none>                            50m    &lt;none>
 wildfly-dc01        NodePort    10.108.166.114   &lt;none>        8080:32187/TCP      2m     app=wildfly-dc01
+                        </code></pre>
+                        <pre class="fragment roll-in"><code>
+# curl 10.108.166.114:8080
+                            ...
+        &lt;h1>Welcome to WildFly&lt;/h1>
+                            ...
+        &lt;h3>Your WildFly instance is running.&lt;/h3>
+                            ...
                         </code></pre>
                     </section>
 
@@ -597,17 +631,24 @@ wildfly-dc01        NodePort    10.108.166.114   &lt;none>        8080:32187/TCP
                         <h3>Ingress-nginx</h3>
 
                         <p class="fragment roll-in">Egyszerű telepítés:</p>
-                        <pre class="fragment roll-in"><code># kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/baremetal/deploy.yaml
+                        <pre class="fragment roll-in"><code>
+# kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/baremetal/deploy.yaml
                         </code></pre>
-                        <pre class="fragment roll-in"><code># kubectl get pods -n ingress-nginx
+                        <pre class="fragment roll-in"><code>
+# kubectl get pods -n ingress-nginx
 NAME                                        READY   STATUS                   RESTARTS        AGE
 ingress-nginx-controller-5b6d755b5f-4vzl4   1/1     Running                  0               1m
                         </code></pre>
+                    </section>
+                    <section>
+                        <h3>Ingress-nginx</h3>
+
                         <pre class="fragment roll-in"><code># kubectl get services -n ingress-nginx
 NAME                                 TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)                      AGE
 ingress-nginx-controller             LoadBalancer   10.98.121.41     &lt;pending>     80:32028/TCP,443:32726/TCP   1m
 ingress-nginx-controller-admission   ClusterIP      10.108.183.145   &lt;none>        443/TCP                      1m
                         </code></pre>
+                        <p class="fragment roll-in">Cluster-IP: <strong>10.98.121.41</strong></p>
                     </section>
                     <section>
                         <h3>Ingress-nginx</h3>
@@ -619,6 +660,12 @@ metadata:
   name: wildfly-dc01-api-ingress
   annotations:
     kubernets.io/ingress.class: "nginx"
+                        </code></pre>
+                    </section>
+                    <section>
+                        <h3>Ingress-nginx</h3>
+
+                        <pre class="fragment roll-in"><code>
 spec:
   ingressClassName: nginx
   rules:
@@ -646,6 +693,24 @@ wildfly-dc01-api-ingress           nginx   api-dc01.domain.tld                  
                     <section>
                         <h3>Ingress-nginx</h3>
 
+                        <pre class="fragment roll-in"><code>
+]# telnet 10.98.121.41 80
+Trying 10.98.121.41...
+Connected to 10.98.121.41.
+Escape character is '^]'.
+GET / HTTP/1.0
+Host: api-dc01.domain.tld
+
+                            ...
+        &lt;h1>Welcome to WildFly&lt;/h1>
+                            ...
+        &lt;h3>Your WildFly instance is running.&lt;/h3>
+                            ...
+                        </code></pre>
+                    </section>
+                    <section>
+                        <h3>Ingress-nginx</h3>
+
                         <p class="fragment roll-in">Mindebből és mindenből három:</p>
                         <pre class="fragment roll-in"><code>
 # kubectl get ingress
@@ -656,13 +721,13 @@ wildfly-dc03-api-ingress           nginx   api-dc03.domain.tld                  
                         </code></pre>
                     </section>
                     <section>
-                        <h3>Ingress-nginx</h3>
+                        <h3>Load-balancing</h3>
 
                         <p class="fragment roll-in">nginx ClusterIP (fix 10.98.121.41)</p>
                         <p class="fragment roll-in">egy dinamikusan módosuló nginx proxy</p>
                         <p class="fragment roll-in">routing: Calico</p>
                         <p class="fragment roll-in">port-forward: Linux iptables</p>
-                        <p class="fragment roll-in">load-balancer: ISP router</p>
+                        <p class="fragment roll-in">fizikai load-balancer: ISP router</p>
                     </section>
                 </section>
 
