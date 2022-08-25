@@ -19,7 +19,9 @@
             <div class="slides">
                 <section>
                     <section>
-                        <h2>Bare-metal multi-region Kubernetes<br/>Wildfly cluster<br/><strike>szop...</strike> tapasztalatok</h2>
+                        <h2>Bare-metal multi-region Kubernetes</h2>
+                        <h3>Wildfly cluster</h3>
+                        <h3 class="fragment roll-in"><strike>szop...</strike> tapasztalatok</h3>
                         <p><small>Gábor AUTH (<a href="mailto:gabor.auth@iotguru.cloud">gabor.auth@iotguru.cloud</a>)</small></p>
                     </section>
                     <section>
@@ -229,7 +231,9 @@
                                 <td class="fragment roll-in"><img style="height:100%;"
                                                                   src="https://d33wubrfki0l68.cloudfront.net/2475489eaf20163ec0f54ddc1d92aa8d4c87c96b/e7c81/images/docs/components-of-kubernetes.svg">
                                 </td>
-                                <td></td>
+                                <td class="fragment roll-in"><img style="height:100%;"
+                                                                  src="https://d33wubrfki0l68.cloudfront.net/2475489eaf20163ec0f54ddc1d92aa8d4c87c96b/e7c81/images/docs/components-of-kubernetes.svg">
+                                </td>
                             </tr>
                         </table>
                     </section>
@@ -269,6 +273,28 @@
                             <li class="fragment roll-in">Self-healing</li>
                             <li class="fragment roll-in">Fail-safe</li>
                         </ul>
+                    </section>
+
+                    <section>
+                        <h3>Wildfly - KUBE_PING</h3>
+
+                        <pre class="fragment roll-in"><code>
+&lt;transport type="TCP" socket-binding="jgroups-tcp"/>
+&lt;protocol type="kubernetes.KUBE_PING">
+  &lt;property name="namespace">${env.POD_NAMESPACE}&lt;/property>
+  &lt;property name="masterHost">${env.K8S_SERVICE_HOST}&lt;/property>
+  &lt;property name="masterPort">${env.K8S_SERVICE_PORT}&lt;/property>
+&lt;/protocol>
+                        </code></pre>
+                    </section>
+
+                    <section>
+                        <h3>Wildfly - KUBE_PING</h3>
+
+                        <pre class="fragment roll-in"><code>
+Received new cluster view for channel ejb: [wildfly-dc01-0|1] (2) ⏎
+        [wildfly-dc01-0, wildfly-dc01-1]
+                        </code></pre>
                     </section>
                 </section>
 
@@ -549,6 +575,16 @@ spec:
           - name: INITIAL_HOSTS
             value: "wildfly-dc01-0.wildfly-dc01.svc.cluster.local[7600], ⏎
                     wildfly-dc01-1.wildfly-dc01.svc.cluster.local[7600]"
+          - ...
+                        </code></pre>
+                    </section>
+                    <section>
+                        <h3>Statefulset</h3>
+
+                        <pre class="fragment roll-in"><code>
+        env:
+          - name: POD_NAMESPACE
+            value: prod"
           - ...
                         </code></pre>
                     </section>
