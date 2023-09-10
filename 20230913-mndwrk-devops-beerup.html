@@ -1,0 +1,260 @@
+<html xmlns="http://www.w3.org/1999/html">
+    <head>
+        <title>Gitlab CI, ArgoCD, GitOps és Kubernetes</title>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+        <link rel="stylesheet" href="css/reveal.css">
+        <link rel="stylesheet" href="css/theme/beige.css" id="theme">
+        <link rel="stylesheet" href="lib/css/zenburn.css">
+        <script src="lib/js/jquery.min.js"></script>
+    </head>
+    <body class="is-preload">
+        <div class="reveal">
+            <div style="width: 95%;margin:auto;margin-top: 0.2em;">
+                <img src="https://assets-global.website-files.com/60be3a76e72a7c397e62f49c/60c7b5fa9679d957537bf1d5_mndwrk-logo-color-svg.svg"
+                     style="float:right;width:20%;">
+                <br/>
+                BeerUP &ndash; 2023. szeptember 13.
+            </div>
+            <hr/>
+            <section class="slides">
+                <section>
+                    <section>
+                        <h2>Gitlab CI, ArgoCD, GitOps és Kubernetes</h2>
+                        <h4 class="fragment roll-in"><strike>szop...</strike> tapasztalatok</h4>
+                        <p><small>Gábor AUTH (<a href="mailto:gabor.auth@iotguru.cloud">gabor.auth@iotguru.cloud</a>)</small></p>
+                    </section>
+
+                    <section>
+                        <h3>Agenda</h3>
+                        <p class="fragment roll-in">1. Alapfogalmak</p>
+                        <p class="fragment roll-in">2. Kubernetes</p>
+                        <p class="fragment roll-in">3. GitOps</p>
+                        <p class="fragment roll-in">4. ArgoCD</p>
+                        <p class="fragment roll-in">5. GitLab CI</p>
+                        <p class="fragment roll-in">6. Összegzés, Q&amp;A</p>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h3>1. Alapfogalmak</h3>
+                        <p class="fragment roll-in">
+                            <img src="20230913/devops-fs8.png" style="width:40%;" alt="DevOpsQA">
+                        </p>
+                    </section>
+
+                    <section>
+                        <h3>1.1. DevOps</h3>
+                        <p class="fragment roll-in">
+                            <em>
+                                "DevOps is the combination of cultural philosophies, practices, and tools that increases an organization’s
+                                ability to deliver applications and services at high velocity: evolving and improving products at a faster
+                                pace than organizations using traditional software development and infrastructure management processes."
+                            </em>
+                        </p>
+                    </section>
+
+                    <section>
+                        <h3>1.1. DevOps</h3>
+                        <ol>
+                            <li class="fragment roll-in">olyan fejlesztő, aki tud üzemeltetni is <em class="fragment roll-in">(bullshit)</em></li>
+                            <li class="fragment roll-in">olyan üzemeltető, aki tud fejleszteni is <em class="fragment roll-in">(bullshit)</em></li>
+                            <li class="fragment roll-in">a fejlesztői infrastruktúrát üzemelteti <em class="fragment roll-in">(platform engineer)</em></li>
+                            <li class="fragment roll-in">a felhős infrastruktúrát üzemelteti <em class="fragment roll-in">(cloud engineer)</em></li>
+                            <li class="fragment roll-in">az alkalmazásüzemeltő <em class="fragment roll-in">(application operations engineer)</em></li>
+                            <li class="fragment roll-in">a DevOps egy olyan filozófia... <em class="fragment roll-in">(ez!)</em></li>
+                        </ol>
+                    </section>
+
+                    <section>
+                        <h3>1.1. DevOps</h3>
+                        <p class="fragment roll-in">
+                            Azt szoktam mondani, hogy a <em>"nálunk a Béla a devopszos"</em> kijelentés pont annyira hülyén kell hangozzon, mint
+                            az, hogy <em>"nálunk a Józsi az agilis fejlesztő"</em>...
+                        </p>
+                        <p class="fragment roll-in">
+                            ...de úgy tűnik, hogy a <em>"nálunk a Béla a devopszos"</em> kijelentés velünk marad.
+                        </p>
+                    </section>
+
+                    <section>
+                        <h3>1.1. DevOps CI/CD loop</h3>
+                        <p class="fragment roll-in">
+                            <img src="20230913/devops-loop.png" style="width:80%;" alt="DevOps loop">
+                        </p>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h3>2. Kubernetes</h3>
+                        <p class="fragment roll-in">
+                            <a href="https://kubernetes.io/">https://kubernetes.io/</a>
+                        </p>
+                        <p class="fragment roll-in">Google hobby-projekt</p>
+                        <p class="fragment roll-in">Nyílt forrású 2014 óta</p>
+                        <p class="fragment roll-in">2020 óta kvázi szabvány</p>
+                        <p class="fragment roll-in">A neve “kormányos” görögül</p>
+                        <p class="fragment roll-in">Konténer-menedzser</p>
+                        <p class="fragment roll-in">Deklaratív konfiguráció</p>
+                    </section>
+                    <section>
+                        <h3>2.1. Mi is ez?</h3>
+                        <p class="fragment roll-in">Service discovery & orchestration</p>
+                        <p class="fragment roll-in">Automated rollout and rollback</p>
+                        <p class="fragment roll-in">Automatic resource packing</p>
+                        <p class="fragment roll-in">Configuration management</p>
+                        <p class="fragment roll-in">Health checks & rules</p>
+                        <p class="fragment roll-in">Load balancing</p>
+                        <p class="fragment roll-in">Self-healing</p>
+                    </section>
+                    <section>
+                        <h3>2.1. Mi is ez?</h3>
+
+                        <div class="fragment roll-in">
+                            <img src="https://d33wubrfki0l68.cloudfront.net/2475489eaf20163ec0f54ddc1d92aa8d4c87c96b/e7c81/images/docs/components-of-kubernetes.svg"></img>
+                        </div>
+                    </section>
+
+                    <section>
+                        <h3>2.2. Workshop</h3>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h3>3. GitOps</h3>
+
+                        <p class="fragment roll-in">
+                            <em>"GitOps uses Git repositories as a single source of truth to deliver infrastructure as code."
+                            </em>
+                        </p>
+                    </section>
+                    <section>
+                        <h3>3.1. Mi is ez?</h3>
+
+                        <p class="fragment roll-in">A standard workflow</p>
+                        <p class="fragment roll-in">Increased security</p>
+                        <p class="fragment roll-in">Improved reliability with visibility</p>
+                        <p class="fragment roll-in">Consistency across all environment</p>
+                    </section>
+                    <section>
+                        <h3>3.2. Workshop</h3>
+                    </section>
+
+                </section>
+
+                <section>
+                    <section>
+                        <h3>4. ArgoCD</h3>
+
+                        <p class="fragment roll-in">
+                            <em>
+                                "Argo CD is a declarative, GitOps continuous delivery tool for Kubernetes."
+                            </em>
+                        </p>
+                    </section>
+                    <section>
+                        <h3>4.1. Mi is ez?</h3>
+
+                        <p class="fragment roll-in">Create clusters with a known state.</p>
+                        <p class="fragment roll-in">Recover or recreate clusters.</p>
+                        <p class="fragment roll-in">Apply or revert configuration changes to multiple clusters.</p>
+                        <p class="fragment roll-in">Templated configuration with different environments.</p>
+                    </section>
+                    <section>
+                        <h3>4.2. Workshop</h3>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h3>5. GitLab CI</h3>
+
+                        <p class="fragment roll-in">
+                            <em>
+                                "GitLab is an open source code repository and collaborative software development platform for large DevOps and DevSecOps
+                                projects."
+                            </em>
+                        </p>
+                    </section>
+                    <section>
+                        <h3>5.1. Mi is ez?</h3>
+
+                        <p class="fragment roll-in">
+                            It aims to provide build automation, test automation, pipeline config management, artifact storage, and pipeline security.
+                        </p>
+                        <p class="fragment roll-in">
+                            A Runner is an application that runs jobs in a pipeline.
+                        </p>
+                        <p class="fragment roll-in">
+                            It's simple, everything is in the .gitlab-ci.yaml
+                        </p>
+                        <p class="fragment roll-in">
+                            ...or templates, or includes, or... nowadays, it's complicated.
+                        </p>
+                    </section>
+                    <section>
+                        <h3>5.1. Mi is ez?</h3>
+
+                        <p class="fragment roll-in">Scripts you want to run.</p>
+                        <p class="fragment roll-in">Configuration files</p>
+                        <p class="fragment roll-in">Templates you want to include.</p>
+                        <p class="fragment roll-in">Dependencies and caches.</p>
+                        <p class="fragment roll-in">Sequence and parallel runs.</p>
+                        <p class="fragment roll-in">Deploy your application.</p>
+                        <p class="fragment roll-in">Automate, trigger or run manually.</p>
+                    </section>
+                    <section>
+                        <section>
+                            <h3>5.2. Workshop</h3>
+                        </section>
+                    </section>
+                    <section>
+                        <h3>6. Összegzés, Q&amp;A</h3>
+                    </section>
+                </section>
+            </section>
+        </div>
+        <script src="lib/js/head.min.js"></script>
+        <script src="js/reveal.js"></script>
+
+        <script>
+            Reveal.initialize({
+                controls: true,
+                progress: true,
+                history: true,
+                center: true,
+                slideNumber: true,
+                transition: 'zoom',
+                dependencies: [
+                    {
+                        src: 'lib/js/classList.js', condition: function () {
+                            return !document.body.classList;
+                        }
+                    },
+                    {
+                        src: 'plugin/markdown/marked.js', condition: function () {
+                            return !!document.querySelector('[data-markdown]');
+                        }
+                    },
+                    {
+                        src: 'plugin/markdown/markdown.js', condition: function () {
+                            return !!document.querySelector('[data-markdown]');
+                        }
+                    },
+                    {
+                        src: 'plugin/highlight/highlight.js', async: true, condition: function () {
+                            return !!document.querySelector('pre code');
+                        }, callback: function () {
+                            hljs.initHighlightingOnLoad();
+                        }
+                    },
+                    {src: 'plugin/zoom-js/zoom.js', async: true},
+                    {src: 'plugin/notes/notes.js', async: true}
+                ]
+            });
+        </script>
+    </body>
+</html>
