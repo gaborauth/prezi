@@ -3,20 +3,17 @@
         <title>Gitlab CI, ArgoCD, GitOps és Kubernetes</title>
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
-        <link rel="stylesheet" href="css/reveal.css">
-        <link rel="stylesheet" href="css/theme/beige.css" id="theme">
-        <link rel="stylesheet" href="lib/css/zenburn.css">
-        <script src="lib/js/jquery.min.js"></script>
+        <link rel="stylesheet" href="reveal.css">
+        <link rel="stylesheet" href="theme/beige.css" id="theme">
     </head>
     <body class="is-preload">
         <div class="reveal">
-            <div style="width: 95%;margin:auto;margin-top: 0.2em;">
+            <div style="width: 95%;margin:0 auto;display:table;height:60px;">
+                <span style="max-height: 48px;display:table-cell;vertical-align:middle;padding-left:30px;">BeerUP &ndash; 2023. szeptember 13.</span>
                 <img src="https://assets-global.website-files.com/60be3a76e72a7c397e62f49c/60c7b5fa9679d957537bf1d5_mndwrk-logo-color-svg.svg"
-                     style="float:right;width:20%;">
-                <br/>
-                BeerUP &ndash; 2023. szeptember 13.
+                     style="float:right;width:100%;max-height: 48px;display:table-cell;vertical-align:middle;">
             </div>
-            <hr/>
+            <hr style="margin:0;"/>
             <section class="slides">
                 <section>
                     <section>
@@ -63,7 +60,7 @@
                             <li class="fragment roll-in">a fejlesztői infrastruktúrát üzemelteti <em class="fragment roll-in">(platform engineer)</em></li>
                             <li class="fragment roll-in">a felhős infrastruktúrát üzemelteti <em class="fragment roll-in">(cloud engineer)</em></li>
                             <li class="fragment roll-in">az alkalmazásüzemeltő <em class="fragment roll-in">(application operations engineer)</em></li>
-                            <li class="fragment roll-in">a DevOps egy olyan filozófia... <em class="fragment roll-in">(ez!)</em></li>
+                            <li class="fragment roll-in">DevOps is the combination of cultural philosophies... <em class="fragment roll-in">(ez!)</em></li>
                         </ol>
                     </section>
 
@@ -80,9 +77,16 @@
 
                     <section>
                         <h3>1.1. DevOps CI/CD loop</h3>
-                        <p class="fragment roll-in">
-                            <img src="20230913/devops-loop.png" style="width:80%;" alt="DevOps loop">
-                        </p>
+                        <div style="position:relative;width:900px;height:412px;margin:0 auto;">
+                            <img class="fragment current-visible fade-in" src="20230913/devops-loop.png"
+                                 style="width:100%;height:100%;position:absolute;top:0;left:0;" alt="DevOps loop">
+                            <img class="fragment current-visible fade-in" src="20230913/devops-loop-1.png"
+                                 style="width:100%;height:100%;position:absolute;top:0;left:0;" alt="DevOps loop">
+                            <img class="fragment current-visible fade-in" src="20230913/devops-loop-2.png"
+                                 style="width:100%;height:100%;position:absolute;top:0;left:0;" alt="DevOps loop">
+                            <img class="fragment current-visible fade-in" src="20230913/devops-loop-3.png"
+                                 style="width:100%;height:100%;position:absolute;top:0;left:0;" alt="DevOps loop">
+                        </div>
                     </section>
                 </section>
 
@@ -96,14 +100,12 @@
                         <p class="fragment roll-in">Nyílt forrású 2014 óta</p>
                         <p class="fragment roll-in">2020 óta kvázi szabvány</p>
                         <p class="fragment roll-in">A neve “kormányos” görögül</p>
-                        <p class="fragment roll-in">Konténer-menedzser</p>
                         <p class="fragment roll-in">Deklaratív konfiguráció</p>
                     </section>
                     <section>
                         <h3>2.1. Mi is ez?</h3>
                         <p class="fragment roll-in">Service discovery & orchestration</p>
                         <p class="fragment roll-in">Automated rollout and rollback</p>
-                        <p class="fragment roll-in">Automatic resource packing</p>
                         <p class="fragment roll-in">Configuration management</p>
                         <p class="fragment roll-in">Health checks & rules</p>
                         <p class="fragment roll-in">Load balancing</p>
@@ -134,15 +136,14 @@
                     <section>
                         <h3>3.1. Mi is ez?</h3>
 
-                        <p class="fragment roll-in">A standard workflow</p>
-                        <p class="fragment roll-in">Increased security</p>
+                        <p class="fragment roll-in">Standard workflow</p>
                         <p class="fragment roll-in">Improved reliability with visibility</p>
                         <p class="fragment roll-in">Consistency across all environment</p>
+                        <p class="fragment roll-in">Increased security</p>
                     </section>
                     <section>
                         <h3>3.2. Workshop</h3>
                     </section>
-
                 </section>
 
                 <section>
@@ -159,8 +160,8 @@
                         <h3>4.1. Mi is ez?</h3>
 
                         <p class="fragment roll-in">Create clusters with a known state.</p>
-                        <p class="fragment roll-in">Recover or recreate clusters.</p>
-                        <p class="fragment roll-in">Apply or revert configuration changes to multiple clusters.</p>
+                        <p class="fragment roll-in">Recover or recreate applications.</p>
+                        <p class="fragment roll-in">Apply or revert configuration changes.</p>
                         <p class="fragment roll-in">Templated configuration with different environments.</p>
                     </section>
                     <section>
@@ -174,17 +175,13 @@
 
                         <p class="fragment roll-in">
                             <em>
-                                "GitLab is an open source code repository and collaborative software development platform for large DevOps and DevSecOps
-                                projects."
+                                "It aims to provide build automation, test automation, pipeline config management, artifact storage, and pipeline security."
                             </em>
                         </p>
                     </section>
                     <section>
                         <h3>5.1. Mi is ez?</h3>
 
-                        <p class="fragment roll-in">
-                            It aims to provide build automation, test automation, pipeline config management, artifact storage, and pipeline security.
-                        </p>
                         <p class="fragment roll-in">
                             A Runner is an application that runs jobs in a pipeline.
                         </p>
@@ -203,25 +200,22 @@
                         <p class="fragment roll-in">Templates you want to include.</p>
                         <p class="fragment roll-in">Dependencies and caches.</p>
                         <p class="fragment roll-in">Sequence and parallel runs.</p>
-                        <p class="fragment roll-in">Deploy your application.</p>
                         <p class="fragment roll-in">Automate, trigger or run manually.</p>
                     </section>
                 </section>
                 <section>
                     <section>
-                        <section>
-                            <h3>5.2. Workshop</h3>
-                        </section>
+                        <h3>5.2. Workshop</h3>
                     </section>
+                </section>
+                <section>
                     <section>
                         <h3>6. Összegzés, Q&amp;A</h3>
                     </section>
                 </section>
             </section>
         </div>
-        <script src="lib/js/head.min.js"></script>
-        <script src="js/reveal.js"></script>
-
+        <script src="reveal.js"></script>
         <script>
             Reveal.initialize({
                 controls: true,
@@ -229,33 +223,7 @@
                 history: true,
                 center: true,
                 slideNumber: true,
-                transition: 'zoom',
-                dependencies: [
-                    {
-                        src: 'lib/js/classList.js', condition: function () {
-                            return !document.body.classList;
-                        }
-                    },
-                    {
-                        src: 'plugin/markdown/marked.js', condition: function () {
-                            return !!document.querySelector('[data-markdown]');
-                        }
-                    },
-                    {
-                        src: 'plugin/markdown/markdown.js', condition: function () {
-                            return !!document.querySelector('[data-markdown]');
-                        }
-                    },
-                    {
-                        src: 'plugin/highlight/highlight.js', async: true, condition: function () {
-                            return !!document.querySelector('pre code');
-                        }, callback: function () {
-                            hljs.initHighlightingOnLoad();
-                        }
-                    },
-                    {src: 'plugin/zoom-js/zoom.js', async: true},
-                    {src: 'plugin/notes/notes.js', async: true}
-                ]
+                transition: 'zoom'
             });
         </script>
     </body>
