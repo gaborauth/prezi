@@ -1,0 +1,108 @@
+stages:
+  - maven-build
+  - sast-test
+  - semantic-release
+  - image-build
+  - development-deploy
+  - production-deploy
+
+include:
+  - template: Security/SAST.gitlab-ci.yml
+  - project: devops/pipelines
+    file: ops-deploy-template.yaml
+
+variables:
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+
+maven-build:
+  stage: maven-build
+  image: maven:3.6.3-jdk-11
+  cache:
+    key: "${CI_JOB_NAME}"
+    paths:
+      - ".m2/repository/"
+  before_script:
+    - pwd
+    - mvn -v
+  script:
+    - mvn -s .settings.xml -U clean install -DskipITs
+  artifacts:
+    paths:
+      - ...
+
+semantic-release:
+  stage: semantic-release
+  image: iotguru/node:lts
+  cache:
+    key: "${CI_JOB_NAME}"
+    paths:
+      - ".m2/repository/"
+  before_script:
+    - npm --version
+    - semantic-release --version
+    - mvn -v
+  script:
+    - semantic-release
+  only:
+    - main
+
+image-build:
+  stage: image-build
+  image:
+    name: gcr.io/kaniko-project/executor:v1.9.0-debug
+  before_script:
+    - pwd
+    - echo $DOCKER_HUB_BASE64 | base64 -d >/kaniko/.docker/config.json
+  script:
+    - cd docker/
+    - /kaniko/executor --context "./" --dockerfile "Dockerfile"
+      --destination "iotguru/powerofplanets-wildfly:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA"
+
+gw-dev-deploy:
+  stage: development-deploy
+  extends:
+    - .ops-deploy-template
+  environment:
+    name: gw-dev
+  resource_group: deploy
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: never
+    - if: $CI_COMMIT_BRANCH
+      when: always
+
+gw-20220305-deploy:
+  stage: production-deploy
+  extends:
+    - .ops-deploy-template
+  environment:
+    name: gw-20220305
+  resource_group: deploy
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: manual
+
+gw-20220405-deploy:
+  stage: production-deploy
+  extends:
+    - .ops-deploy-template
+  environment:
+    name: gw-20220405
+  resource_group: deploy
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: manual
+
+gw-20220420-deploy:
+  stage: production-deploy
+  extends:
+    - .ops-deploy-template
+  environment:
+    name: gw-20220420
+  resource_group: deploy
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: manual
+
+sast:
+  stage: sast-test

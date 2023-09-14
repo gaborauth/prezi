@@ -1,0 +1,20 @@
+stages:
+  - gitops
+
+gitops:
+  stage: gitops
+  image: alpine/git:latest 
+  script:
+    - uname -a
+    - echo $UPSTREAM_ENVIRONMENT
+    - echo $UPSTREAM_COMMIT_REF_NAME 
+    - git config user.name "$GITLAB_USER_NAME [CI]"
+    - git config user.email "$GITLAB_USER_EMAIL"
+    - git checkout "$CI_COMMIT_REF_NAME"
+    - GITLAB_ORIGIN=`echo $CI_PROJECT_URL | sed s/"https:\/\/"/"https:\/\/gitlab-ci-token:$GITLAB_TOKEN@"/`
+    - echo $GITLAB_ORIGIN
+    - git remote add gitlab_origin $GITLAB_ORIGIN
+    - sed -i '/REPLACE_IMAGE_TAG/c\    newTag:'' '$UPSTREAM_COMMIT_REF_NAME' \#REPLACE_IMAGE_TAG' argocd/$UPSTREAM_ENVIRONMENT/kustomization.yaml
+    - git add .
+    - git diff-index --quiet HEAD || git commit -m "[CI] Deploy '$UPSTREAM_COMMIT_REF_NAME' on '$UPSTREAM_ENVIRONMENT' environment"
+    - git push gitlab_origin HEAD:$CI_COMMIT_REF_NAME -o ci.skip
