@@ -1,0 +1,183 @@
+<html xmlns="http://www.w3.org/1999/html">
+    <head>
+        <title>Terraform & GitLab CI</title>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+        <link rel="stylesheet" href="reveal.css">
+        <link rel="stylesheet" href="theme/beige.css" id="theme">
+        <style>
+            .fragment {
+                font-size: 90%;
+            }
+        </style>
+    </head>
+    <body class="is-preload">
+        <div class="reveal">
+            <div style="width: 95%;margin:0 auto;display:table;height:60px;">
+                <span style="max-height: 48px;display:table-cell;vertical-align:middle;padding-left:30px;">BeerUP &ndash; 2023. október 11.</span>
+                <img src="https://assets-global.website-files.com/60be3a76e72a7c397e62f49c/60c7b5fa9679d957537bf1d5_mndwrk-logo-color-svg.svg"
+                     style="float:right;width:100%;max-height: 48px;display:table-cell;vertical-align:middle;">
+            </div>
+            <hr style="margin:0;"/>
+            <section class="slides">
+                <section>
+                    <section>
+                        <h2>Terraform & GitLab CI</h2>
+                        <p><small>Gábor AUTH (<a href="mailto:gabor.auth@iotguru.cloud">gabor.auth@iotguru.cloud</a>)</small></p>
+                    </section>
+
+                    <section>
+                        <h3>Agenda</h3>
+                        <p class="fragment roll-in">1. Terraform</p>
+                        <p class="fragment roll-in">2. GitLab CI</p>
+                        <p class="fragment roll-in">3. Integrate</p>
+                        <p class="fragment roll-in">4. Summary, Q&amp;A</p>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h3>1. Terraform</h3>
+                        <p class="fragment roll-in">
+                            <em>
+                                "Terraform is an infrastructure as code tool that enables you to safely
+                                and predictably provision and manage infrastructure in any cloud."
+                            </em>
+                        </p>
+                    </section>
+
+                    <section>
+                        <h3>1. Terraform</h3>
+                        <ol>
+                            <li class="fragment roll-in">Infrastructure as code.</li>
+                            <li class="fragment roll-in">Multi-cloud provisioning.</li>
+                            <li class="fragment roll-in">Manage Kubernetes.</li>
+                            <li class="fragment roll-in">Manage network infrastructure.</li>
+                            <li class="fragment roll-in">Manage virtual images.</li>
+                            <li class="fragment roll-in">Integrate with existing workflows.</li>
+                            <li class="fragment roll-in">Enforce policy as code.</li>
+                        </ol>
+                    </section>
+
+                    <section>
+                        <h3>1. Terraform</h3>
+                        <img class="fragment fade-in" src="20231011/terraform_example_main.png" alt="Terraform main example">
+                    </section>
+
+                    <section>
+                        <h3>1. Terraform</h3>
+                        <img class="fragment fade-in" src="20231011/terraform_example_provider.png" alt="Terraform provider example">
+                    </section>
+
+                    <section>
+                        <h3>1. Terraform</h3>
+                        <img class="fragment fade-in" src="20231011/terraform_example_variables.png" alt="Terraform variables example">
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h3>2. GitLab CI</h3>
+
+                        <p class="fragment roll-in">
+                            <em>
+                                "It aims to provide build automation, test automation, pipeline config management,
+                                artifact storage, and pipeline security."
+                            </em>
+                        </p>
+                    </section>
+
+                    <section>
+                        <h3>2. GitLab CI</h3>
+
+                        <p class="fragment roll-in">
+                            A Runner is an application that runs jobs in a pipeline.
+                        </p>
+                        <p class="fragment roll-in">
+                            It's simple, everything is in the .gitlab-ci.yaml
+                        </p>
+                        <p class="fragment roll-in">
+                            ...or templates, or includes, or... nowadays, it's complicated.
+                        </p>
+                    </section>
+
+                    <section>
+                        <h3>2. GitLab CI</h3>
+
+                        <p class="fragment roll-in">Scripts you want to run.</p>
+                        <p class="fragment roll-in">Configuration files.</p>
+                        <p class="fragment roll-in">Templates you want to include.</p>
+                        <p class="fragment roll-in">Dependencies and caches.</p>
+                        <p class="fragment roll-in">Sequence and parallel runs.</p>
+                        <p class="fragment roll-in">Automate, trigger or run manually.</p>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h3>3. Integrate</h3>
+                        <img class="fragment fade-in" src="20231011/gitlab_terraform.png" alt="GitLab + Terraform">
+                    </section>
+
+                    <section>
+                        <h3>3. Integrate</h3>
+                        <img class="fragment fade-in" src="20231011/gitlab_ci_1.png" alt="GitLab CI 1">
+                    </section>
+
+                    <section>
+                        <h3>3. Integrate</h3>
+                        <img class="fragment fade-in" src="20231011/gitlab_ci_2.png" alt="GitLab CI 2">
+                    </section>
+
+                    <section>
+                        <h3>3. Integrate</h3>
+                        <img class="fragment fade-in" src="20231011/gitlab_pipeline.png" alt="GitLab pipeline">
+                    </section>
+
+                    <section>
+                        <h3>3. Integrate</h3>
+                        <img class="fragment fade-in" src="20231011/gitlab_pipeline_deploy.png" alt="GitLab pipeline deploy">
+                    </section>
+
+                    <section>
+                        <h3>3. Integrate</h3>
+                        <img class="fragment fade-in" src="20231011/gitlab_ci_vars.png" alt="GitLab env vars">
+                    </section>
+
+                    <section>
+                        <h3>3. Integrate</h3>
+                        <img class="fragment fade-in" src="20231011/gitlab_terraform_state.png" alt="GitLab terraform state">
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h3>6. Summary, Q&amp;A</h3>
+                        <img class="fragment fade-in" src="20231011/gitlab_pipeline_build_text.png" alt="GitLab pipeline build">
+                    </section>
+
+                    <section>
+                        <h3>6. Summary, Q&amp;A</h3>
+                        <img class="fragment fade-in" src="20231011/gitlab_pipeline_deploy_text.png" alt="GitLab pipeline deploy">
+                    </section>
+
+                    <section>
+                        <h3>6. Summary, Q&amp;A</h3>
+                        <img class="fragment fade-in" src="20231011/aws_gitops.png" alt="AWS EC2 GitOps">
+                    </section>
+                </section>
+            </section>
+        </div>
+        <script src="reveal.js"></script>
+        <script>
+            Reveal.initialize({
+                controls: true,
+                progress: true,
+                history: true,
+                center: true,
+                slideNumber: true,
+                transition: 'zoom'
+            });
+        </script>
+    </body>
+</html>
