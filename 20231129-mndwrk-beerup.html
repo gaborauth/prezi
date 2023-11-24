@@ -1,0 +1,198 @@
+<html xmlns="http://www.w3.org/1999/html">
+    <head>
+        <title>Gitlab CI test automation</title>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+        <link rel="stylesheet" href="reveal.css">
+        <link rel="stylesheet" href="theme/beige.css" id="theme">
+        <style>
+            .fragment {
+                font-size: 90%;
+            }
+        </style>
+    </head>
+    <body class="is-preload">
+        <div class="reveal">
+            <div style="width: 95%;margin:0 auto;display:table;height:60px;">
+                <span style="max-height: 48px;display:table-cell;vertical-align:middle;padding-left:30px;">BeerUP &ndash; 2023. november 29.</span>
+                <img src="https://assets-global.website-files.com/60be3a76e72a7c397e62f49c/60c7b5fa9679d957537bf1d5_mndwrk-logo-color-svg.svg"
+                     style="float:right;width:100%;max-height: 48px;display:table-cell;vertical-align:middle;">
+            </div>
+            <hr style="margin:0;"/>
+            <section class="slides">
+                <section>
+                    <section>
+                        <h2>Gitlab CI test automation</h2>
+                        <p><small>Gábor AUTH (<a href="mailto:gabor.auth@iotguru.cloud">gabor.auth@iotguru.cloud</a>)</small></p>
+                    </section>
+
+                    <section>
+                        <h3>Agenda</h3>
+                        <p class="fragment roll-in">1. DevOps</p>
+                        <p class="fragment roll-in">2. Gitlab CI</p>
+                        <p class="fragment roll-in">3. Test levels</p>
+                        <p class="fragment roll-in">4. Pipeline</p>
+                        <p class="fragment roll-in">5. Gitlab test reports</p>
+                        <p class="fragment roll-in">6. Summary, Q&amp;A</p>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h3>1. DevOps</h3>
+                        <p class="fragment roll-in">
+                            <img src="20231129/devops-fs8.png" style="width:40%;" alt="DevOpsQA">
+                        </p>
+                    </section>
+
+                    <section>
+                        <h3>1.1. DevOps</h3>
+                        <p class="fragment roll-in">
+                            <em>
+                                "DevOps is the combination of cultural philosophies, practices, and tools that increases an organization’s
+                                ability to deliver applications and services at high velocity: evolving and improving products at a faster
+                                pace than organizations using traditional software development and infrastructure management processes."
+                            </em>
+                        </p>
+                    </section>
+
+                    <section>
+                        <h3>1.1. DevOps</h3>
+                        <ol>
+                            <li class="fragment roll-in">olyan fejlesztő, aki tud üzemeltetni is <em class="fragment roll-in">(bullshit)</em></li>
+                            <li class="fragment roll-in">olyan üzemeltető, aki tud fejleszteni is <em class="fragment roll-in">(bullshit)</em></li>
+                            <li class="fragment roll-in">a fejlesztői infrastruktúrát üzemelteti <em class="fragment roll-in">(platform engineer)</em></li>
+                            <li class="fragment roll-in">a felhős infrastruktúrát üzemelteti <em class="fragment roll-in">(cloud engineer)</em></li>
+                            <li class="fragment roll-in">az alkalmazásüzemeltő <em class="fragment roll-in">(application operations engineer)</em></li>
+                            <li class="fragment roll-in">DevOps is the combination of cultural philosophies... <em class="fragment roll-in">(ez!)</em></li>
+                        </ol>
+                    </section>
+
+                    <section>
+                        <h3>1.1. DevOps</h3>
+                        <p class="fragment roll-in">
+                            Azt szoktam mondani, hogy a <em>"nálunk a Béla a devopszos"</em> kijelentés pont annyira hülyén kell hangozzon, mint
+                            az, hogy <em>"nálunk a Józsi az agilis fejlesztő"</em>...
+                        </p>
+                        <p class="fragment roll-in">
+                            ...de úgy tűnik, hogy a <em>"nálunk a Béla a devopszos"</em> kijelentés velünk marad.
+                        </p>
+                    </section>
+
+                    <section>
+                        <h3>1.1. DevOps CI/CD loop</h3>
+                        <div style="position:relative;width:900px;height:412px;margin:0 auto;">
+                            <img src="20231129/devops-loop.png" style="width:80%;" alt="DevOps loop">
+                        </div>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h3>2. GitLab CI</h3>
+
+                        <p class="fragment roll-in">
+                            <em>
+                                "It aims to provide build automation, test automation, pipeline config management, artifact storage, and pipeline security."
+                            </em>
+                        </p>
+                    </section>
+                    <section>
+                        <h3>2.1. Mi is ez?</h3>
+
+                        <p class="fragment roll-in">
+                            A Runner is an application that runs jobs in a pipeline.
+                        </p>
+                        <p class="fragment roll-in">
+                            It's simple, everything is in the .gitlab-ci.yaml
+                        </p>
+                        <p class="fragment roll-in">
+                            ...or templates, or includes, or... nowadays, it's complicated.
+                        </p>
+                    </section>
+                    <section>
+                        <h3>2.1. Mi is ez?</h3>
+
+                        <p class="fragment roll-in">Scripts you want to run.</p>
+                        <p class="fragment roll-in">Configuration files.</p>
+                        <p class="fragment roll-in">Templates you want to include.</p>
+                        <p class="fragment roll-in">Dependencies and caches.</p>
+                        <p class="fragment roll-in">Sequence and parallel runs.</p>
+                        <p class="fragment roll-in">Automate, trigger or run manually.</p>
+                    </section>
+
+                    <section>
+                        <h3>2.2. Példa</h3>
+                        <img src="20231129/gitlab-ci.png" style="width:80%;" alt="Gitlab CI">
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h3>3. Test levels</h3>
+
+                        <img src="20231129/test-levels.png" style="width:80%;" alt="Test levels">
+                    </section>
+                    <section>
+                        <h3>3. Test levels</h3>
+
+                        <img src="20231129/test-levels-2.png" style="width:80%;" alt="Test levels">
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h3>4. Pipelines</h3>
+
+                        <img src="20231129/pipeline.png" style="width:100%;" alt="Test levels">
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h3>5. Gitlab test reports</h3>
+                        <img src="20231129/visual-5n.png" style="width:100%;" alt="Visual5n">
+                    </section>
+                    <section>
+                        <h3>5. Gitlab test reports</h3>
+                        <img src="20231129/visual-5.png" style="width:100%;" alt="Visual5">
+                    </section>
+                    <section>
+                        <h3>5. Gitlab test reports</h3>
+                        <img src="20231129/visual-1.png" style="width:100%;" alt="Visual1">
+                    </section>
+                    <section>
+                        <h3>5. Gitlab test reports</h3>
+                        <img src="20231129/visual-2.png" style="width:100%;" alt="Visual2">
+                    </section>
+                    <section>
+                        <h3>5. Gitlab test reports</h3>
+                        <img src="20231129/visual-3.png" style="width:100%;" alt="Visual3">
+                    </section>
+                    <section>
+                        <h3>5. Gitlab test reports</h3>
+                        <img src="20231129/visual-4.png" style="width:100%;" alt="Visual4">
+                    </section>
+                </section>
+
+
+                <section>
+                    <section>
+                        <h3>6. Summary, Q&amp;A</h3>
+                    </section>
+                </section>
+            </section>
+        </div>
+        <script src="reveal.js"></script>
+        <script>
+            Reveal.initialize({
+                controls: true,
+                progress: true,
+                history: true,
+                center: true,
+                slideNumber: true,
+                transition: 'zoom'
+            });
+        </script>
+    </body>
+</html>
