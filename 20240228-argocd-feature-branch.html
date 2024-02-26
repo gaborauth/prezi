@@ -1,0 +1,260 @@
+<html xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+    <head>
+        <title>Kubernetes, GitOps and ArgoCD</title>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+        <link rel="stylesheet" href="reveal.css">
+        <link rel="stylesheet" href="theme/beige.css" id="theme">
+        <style>
+            .fragment {
+                font-size: 90%;
+            }
+        </style>
+    </head>
+    <body class="is-preload">
+        <script src="plugin/notes/notes.js"></script>
+        <div class="reveal">
+            <div style="width: 95%;margin:0 auto;display:table;height:60px;">
+                <span style="float: left;max-height: 48px;display:table-cell;vertical-align:middle;padding-left:30px;">CNCF Community</span>
+                <span style="float: right;max-height: 48px;display:table-cell;vertical-align:middle;padding-right:30px;">2024-02-28</span>
+            </div>
+            <hr style="margin:0;"/>
+            <section class="slides">
+                <section>
+                    <section>
+                        <h2>Kubernetes, GitOps and ArgoCD</h2>
+                        <h3>feature branch deploy</h3>
+                        <h4 class="fragment roll-in"><strike>sucks...</strike> <span class="fragment roll-in">experiences</span></h4>
+                        <p><small>Gábor AUTH (<a href="mailto:gabor.auth@iotguru.cloud">gabor.auth@iotguru.cloud</a>)</small></p>
+                        <aside class="notes">
+                            Hi, guys! This is my first presentation in English. I hope you will understand me, I will try my best.<br>
+                            If you have any questions, feel free to ask me anytime, I will try to answer them.<br>
+                        </aside>
+                    </section>
+
+                    <section>
+                        <h3>Agenda</h3>
+                        <p class="fragment roll-in">1. Kubernetes</p>
+                        <p class="fragment roll-in">2. Gitlab and CI</p>
+                        <p class="fragment roll-in">3. GitOps</p>
+                        <p class="fragment roll-in">4. ArgoCD</p>
+                        <p class="fragment roll-in">5. Feature branch deploy</p>
+                        <p class="fragment roll-in">6. Summary, Q&amp;A</p>
+                        <aside class="notes">
+                            I will talk about Kubernetes, Git and GitOps, ArgoCD and feature branch deploy with ArgoCD.<br>
+                            I will show you some examples, then we can discuss it.<br>
+                        </aside>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h3>1. Kubernetes</h3>
+                        <p class="fragment roll-in">
+                            <a href="https://kubernetes.io/">https://kubernetes.io/</a>
+                        </p>
+                        <p class="fragment roll-in">Google hobby-project</p>
+                        <p class="fragment roll-in">Open-source since 2014</p>
+                        <p class="fragment roll-in">Quasi-standard since 2020</p>
+                        <p class="fragment roll-in">The name means “helmsman” or "pilot" in Greek</p>
+                        <p class="fragment roll-in">The configuration is declarative</p>
+                        <aside class="notes">
+                            Who uses Kubernetes? Hands up!<br>
+                            Kubernetes is a container orchestration platform that automates the deployment, scaling, and management of containerized applications.<br>
+                            It was originally designed by Google and is now maintained by the Cloud Native Computing Foundation.<br>
+                            The name Kubernetes originates from Greek, meaning helmsman or pilot. Google open-sourced the Kubernetes project in 2014.<br>
+                            Kubernetes is a portable, extensible, open-source platform for managing containerized workloads and services, that facilitates both declarative configuration and automation.<br>
+                        </aside>
+                    </section>
+                    <section>
+                        <h3>1.1. What is it?</h3>
+                        <p class="fragment roll-in">Service discovery & orchestration</p>
+                        <p class="fragment roll-in">Automated rollout and rollback</p>
+                        <p class="fragment roll-in">Configuration management</p>
+                        <p class="fragment roll-in">Health checks & rules</p>
+                        <p class="fragment roll-in">Load balancing</p>
+                        <p class="fragment roll-in">Self-healing</p>
+                        <aside class="notes">
+                            Service discovery and orchestration: Kubernetes can track your services real-time and automatically update DNS entries for them.<br>
+                            Automated rollout and rollback: Kubernetes can change the state of your application.<br>
+                            Configuration management: Kubernetes can store and manage the whole configuration of your application.<br>
+                            Health checks and rules: Kubernetes can check the health of your application and restart it if it's necessary.<br>
+                            Load balancing: Kubernetes provides load balancers and proxies for your application.<br>
+                            Self-healing: Kubernetes can heal itself if something goes wrong. It's really unstoppable.<br>
+                        </aside>
+                    </section>
+                    <section>
+                        <h3>1.1. What is it?</h3>
+
+                        <div class="fragment roll-in">
+                            <img src="https://d33wubrfki0l68.cloudfront.net/2475489eaf20163ec0f54ddc1d92aa8d4c87c96b/e7c81/images/docs/components-of-kubernetes.svg"></img>
+                        </div>
+                        <aside class="notes">
+                            Main parts of the Kubernetes cluster are the control plane and the worker nodes.<br>
+                            The control plane is responsible for managing the cluster.<br>
+                            The worker nodes are responsible for running the actual applications.<br>
+                        </aside>
+                    </section>
+
+                    <section>
+                        <h3>1.2. Little workshop</h3>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h3>2. GitLab and CI</h3>
+
+                        <p class="fragment roll-in">
+                            <em>
+                                "GitLab allows us to collaborate very well with team members and between different teams."
+                            </em>
+                        </p>
+                        <aside class="notes">
+                            Who uses GitLab? Hands up!<br>
+                            GitLab is a web-based DevOps lifecycle tool that provides a Git repository, wiki, issue-tracking and CI/CD pipeline features, using an open-source license, developed by GitLab Inc.<br>
+                            The CI part aims to provide build automation, test automation, pipeline config management, artifact storage, and pipeline security.<br>
+                    </section>
+                    <section>
+                        <h3>2.1. What is it?</h3>
+
+                        <p class="fragment roll-in">
+                            A Runner is an application that runs jobs in a pipeline.
+                        </p>
+                        <p class="fragment roll-in">
+                            It's simple, everything is in the .gitlab-ci.yaml
+                        </p>
+                        <p class="fragment roll-in">
+                            ...or templates, or includes, or... nowadays, it's complicated.
+                        </p>
+                        <aside class="notes">
+                            A Runner is an application that runs jobs in a pipeline.<br>
+                            It's simple, everything is in the .gitlab-ci.yaml<br>
+                            ...or templates, or includes, or... nowadays, it's complicated.<br>
+                        </aside>
+                    </section>
+                    <section>
+                        <h3>2.1. What is it?</h3>
+
+                        <p class="fragment roll-in">Scripts you want to run.</p>
+                        <p class="fragment roll-in">Configuration files.</p>
+                        <p class="fragment roll-in">Templates you want to include.</p>
+                        <p class="fragment roll-in">Dependencies and caches.</p>
+                        <p class="fragment roll-in">Sequence and parallel runs.</p>
+                        <p class="fragment roll-in">Automate, trigger or run manually.</p>
+                        <aside class="notes">
+                            Scripts you want to run.<br>
+                            Configuration files.<br>
+                            Templates you want to include.<br>
+                            Dependencies and caches.<br>
+                            Sequence and parallel runs.<br>
+                            Automate, trigger or run manually.<br>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h3>2.2. Workshop</h3>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h3>3. GitOps</h3>
+
+                        <p class="fragment roll-in">
+                            <em>"GitOps uses Git repositories as a single source of truth to deliver infrastructure as code."
+                            </em>
+                        </p>
+                        <aside class="notes">
+                            GitOps is a way to do Kubernetes cluster management and application delivery.<br>
+                            It works by using Git as a single source of truth for declarative infrastructure and applications.<br>
+                            With Git at the center of your delivery pipelines, developers can make pull requests to accelerate
+                            and simplify application deployments and operations tasks to Kubernetes.<br>
+                        </aside>
+                    </section>
+                    <section>
+                        <h3>3. GitOps</h3>
+
+                        <p class="fragment roll-in">
+                            single source of truth
+                        </p>
+                        <aside class="notes">
+                            The main message is that Git is the single source of truth for the whole system.<br>
+                            Write down everything in Git, and the system will be consistent.<br>
+                            The change management is also easier, because you can see the changes in the Git history.<br>
+                        </aside>
+                    </section>
+
+                    <section>
+                        <h3>3.1. What is it?</h3>
+
+                        <p class="fragment roll-in">Standard workflow</p>
+                        <p class="fragment roll-in">Improved reliability with visibility</p>
+                        <p class="fragment roll-in">Consistency across all environment</p>
+                        <p class="fragment roll-in">Increased security</p>
+                        <aside class="notes">
+                            GitOps uses the same flow as the standard Git flow.<br>
+                            Every change is visible, because it's in the Git history. Every change revertable, because it's in the Git history.<br>
+                            The system will be consistent across all environments, because the configuration mainly is the same.<br>
+                            The security is also increased, because you can see the changes in the Git history.<br>
+                        </aside>
+                    </section>
+                    <section>
+                        <h3>3.2. Little workshop</h3>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h3>4. ArgoCD</h3>
+
+                        <p class="fragment roll-in">
+                            <em>
+                                "Argo CD is a declarative, GitOps continuous delivery tool for Kubernetes."
+                            </em>
+                        </p>
+                        <aside class="notes">
+                            It follows the GitOps pattern of using Git repositories as the single source of truth for defining the desired application state.<br>
+                            Argo CD automates the deployment of the desired application states in the specified target environments.<br>
+                            And more...<br>
+                    </section>
+                    <section>
+                        <h3>4.1. What is it?</h3>
+
+                        <p class="fragment roll-in">Create clusters with a known state.</p>
+                        <p class="fragment roll-in">Recover or recreate applications.</p>
+                        <p class="fragment roll-in">Apply or revert configuration changes.</p>
+                        <p class="fragment roll-in">Templated configuration with different environments.</p>
+                        <aside class="notes">
+                            Argo CD is a declarative, the Git contains the desired state of the application.<br>
+                            Keeps the Git and the Kubernetes in sync, removes the unnecessary resources, creates the missing resources.<br>
+                            Uses templated configuration, so you can use the same configuration in different environments.<br>
+                            Even feature branches...<br>
+                        </aside>
+                    </section>
+                    <section>
+                        <h3>4.2. Workshop</h3>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h3>6. Summary, Q&amp;A</h3>
+                    </section>
+                </section>
+            </section>
+        </div>
+        <script src="reveal.js"></script>
+        <script>
+            Reveal.initialize({
+                controls: true,
+                progress: true,
+                history: true,
+                center: true,
+                slideNumber: true,
+                transition: 'zoom',
+                plugins: [RevealNotes]
+            });
+        </script>
+    </body>
+</html>
