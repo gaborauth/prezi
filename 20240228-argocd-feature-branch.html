@@ -27,7 +27,8 @@
                         <h4 class="fragment roll-in"><strike>sucks...</strike> <span class="fragment roll-in">experiences</span></h4>
                         <p><small>Gábor AUTH (<a href="mailto:gabor.auth@iotguru.cloud">gabor.auth@iotguru.cloud</a>)</small></p>
                         <aside class="notes">
-                            Hi, guys! This is my first presentation in English. I hope you will understand me, I will try my best.<br>
+                            Hi, guys! This is my first presentation in English.<br>
+                            I hope you will understand me, I will try my best.<br>
                             If you have any questions, feel free to ask me anytime, I will try to answer them.<br>
                         </aside>
                     </section>
@@ -41,7 +42,7 @@
                         <p class="fragment roll-in">5. Feature branch deploy</p>
                         <p class="fragment roll-in">6. Summary, Q&amp;A</p>
                         <aside class="notes">
-                            I will talk about Kubernetes, Git and GitOps, ArgoCD and feature branch deploy with ArgoCD.<br>
+                            So, I will talk about Kubernetes, Git and GitOps, ArgoCD and feature branch deploy with ArgoCD.<br>
                             I will show you some examples, then we can discuss it.<br>
                         </aside>
                     </section>
@@ -56,14 +57,16 @@
                         <p class="fragment roll-in">Google hobby-project</p>
                         <p class="fragment roll-in">Open-source since 2014</p>
                         <p class="fragment roll-in">Quasi-standard since 2020</p>
-                        <p class="fragment roll-in">The name means “helmsman” or "pilot" in Greek</p>
+                        <p class="fragment roll-in">The name means “helmsman” or "ship pilot" in Greek</p>
                         <p class="fragment roll-in">The configuration is declarative</p>
                         <aside class="notes">
                             Who uses Kubernetes? Hands up!<br>
-                            Kubernetes is a container orchestration platform that automates the deployment, scaling, and management of containerized applications.<br>
+                            So, Kubernetes is a container orchestration platform that automates the deployment, scaling, and management of containerized
+                            applications.<br>
                             It was originally designed by Google and is now maintained by the Cloud Native Computing Foundation.<br>
-                            The name Kubernetes originates from Greek, meaning helmsman or pilot. Google open-sourced the Kubernetes project in 2014.<br>
-                            Kubernetes is a portable, extensible, open-source platform for managing containerized workloads and services, that facilitates both declarative configuration and automation.<br>
+                            The name Kubernetes originates from Greek, meaning helmsman or ship pilot. Google open-sourced the Kubernetes project in 2014.<br>
+                            Kubernetes is a portable, extensible, open-source platform for managing containerized workloads and services, that facilitates both
+                            declarative configuration and automation.<br>
                         </aside>
                     </section>
                     <section>
@@ -93,11 +96,95 @@
                             Main parts of the Kubernetes cluster are the control plane and the worker nodes.<br>
                             The control plane is responsible for managing the cluster.<br>
                             The worker nodes are responsible for running the actual applications.<br>
+                            It's a little bit more complicated, and the configuration is painful, but it's worth it.<br>
                         </aside>
                     </section>
 
                     <section>
-                        <h3>1.2. Little workshop</h3>
+                        <h3>1.2. CLI and API</h3>
+
+                        <p class="fragment roll-in">Full-featured API via kubectl</p>
+                        <p class="fragment roll-in">Create, delete, update, scale, etc.</p>
+                        <p class="fragment roll-in">Pods, services, deployments, etc.</p>
+                        <p class="fragment roll-in">Ingress, network policies, etc.</p>
+                        <p class="fragment roll-in">ConfigMaps, secrets, etc.</p>
+                        <p class="fragment roll-in">...and more</p>
+                        <aside class="notes">
+                            kubectl is the main tool to interact with the Kubernetes cluster.<br>
+                            You can create, delete, update, scale, etc. with it.<br>
+                            You can manage pods, services, deployments, etc.<br>
+                            You can manage ingress, network policies, etc.<br>
+                            You can manage ConfigMaps, secrets, etc.<br>
+                            ...and more<br>
+                        </aside>
+                    </section>
+
+                    <section>
+                        <h3>1.3. CLI and API</h3>
+
+                        <p class="fragment roll-in">The Kubernetes cluster persists the desired state</p>
+                        <p class="fragment roll-in">It will try to reach the desired state</p>
+                        <p class="fragment roll-in">It will heal itself if something goes wrong</p>
+                        <p class="fragment roll-in">BUT you can hurt it</p>
+                        <aside class="notes">
+                            The Kubernetes cluster persists the desired state of the system.<br>
+                            It will try to reach the desired state, and it will heal itself if something goes wrong.<br>
+                            But you can hurt it easily, you can delete almost the whole cluster with one command.<br>
+                        </aside>
+                    </section>
+
+                    <section>
+                        <h3>1.3. Little workshop</h3>
+
+                        <p class="fragment roll-in">kubectl get pods</p>
+                        <p class="fragment roll-in">kubectl create deployment --image nginx nginx</p>
+                        <p class="fragment roll-in">kubectl get pods</p>
+                        <p class="fragment roll-in">kubectl delete deployment nginx</p>
+                        <p class="fragment roll-in">Ups...</p>
+                        <aside class="notes">
+                            Let's see some examples.<br>
+                            First, we will list the pods in the cluster.<br>
+                            Then we will create a deployment with the nginx image.<br>
+                            We will list the pods again.<br>
+                            Then we will delete the deployment.<br>
+                            Ups... we don't want to delete the whole deployment, but accidentally we did it.<br>
+                        </aside>
+                    </section>
+
+                    <section>
+                        <h3>1.3. Little workshop</h3>
+
+                        <p class="fragment roll-in">Store our nginx in a yaml file</p>
+                        <p class="fragment roll-in">kubectl apply -f nginx.yaml</p>
+                        <p class="fragment roll-in">kubectl get pods</p>
+                        <p class="fragment roll-in">kubectl delete deployment nginx</p>
+                        <p class="fragment roll-in">Ups...</p>
+                        <p class="fragment roll-in">kubectl apply -f nginx.yaml</p>
+                        <p class="fragment roll-in">kubectl get pods</p>
+                        <aside class="notes">
+                            Let's see some other examples.<br>
+                            First, we will store our nginx deployment in a yaml file.<br>
+                            Then we will apply the yaml file to the cluster.<br>
+                            We will list the pods again.<br>
+                            Then we will delete the deployment.<br>
+                            Ups... we don't want to delete the whole deployment, but accidentally we did it.<br>
+                            Never mind, then we will apply again the yaml file.<br>
+                            We will list the pods again, so we are happy.<br>
+                        </aside>
+                    </section>
+
+                    <section>
+                        <h3>1.3. Little workshop</h3>
+
+                        <p class="fragment roll-in">Where can we store these yaml files?</p>
+                        <p class="fragment roll-in">How can we manage the yaml files?</p>
+                        <p class="fragment roll-in">How can we manage the configuration?</p>
+                        <p class="fragment roll-in">This point where the GitOps comes in!</p>
+                        <aside class="notes">
+                            Locally? In the cloud? In the cluster? On the control plane?<br>
+                            Who can access these files? Who can modify these files?<br>
+                            How can we manage the configuration? How can we manage the changes?<br>
+                            This point where the GitOps comes in! Store them in a Git repository.<br>
                     </section>
                 </section>
 
@@ -112,48 +199,23 @@
                         </p>
                         <aside class="notes">
                             Who uses GitLab? Hands up!<br>
-                            GitLab is a web-based DevOps lifecycle tool that provides a Git repository, wiki, issue-tracking and CI/CD pipeline features, using an open-source license, developed by GitLab Inc.<br>
-                            The CI part aims to provide build automation, test automation, pipeline config management, artifact storage, and pipeline security.<br>
-                    </section>
-                    <section>
-                        <h3>2.1. What is it?</h3>
-
-                        <p class="fragment roll-in">
-                            A Runner is an application that runs jobs in a pipeline.
-                        </p>
-                        <p class="fragment roll-in">
-                            It's simple, everything is in the .gitlab-ci.yaml
-                        </p>
-                        <p class="fragment roll-in">
-                            ...or templates, or includes, or... nowadays, it's complicated.
-                        </p>
-                        <aside class="notes">
-                            A Runner is an application that runs jobs in a pipeline.<br>
-                            It's simple, everything is in the .gitlab-ci.yaml<br>
-                            ...or templates, or includes, or... nowadays, it's complicated.<br>
+                            GitLab is a web-based DevOps lifecycle tool that provides a Git repository, wiki, issue-tracking and CI/CD pipeline features, using
+                            an open-source license, developed by GitLab Inc.<br>
+                            The CI part aims to provide build automation, test automation, pipeline config management, artifact storage, and pipeline
+                            security.<br>
                         </aside>
                     </section>
                     <section>
                         <h3>2.1. What is it?</h3>
 
-                        <p class="fragment roll-in">Scripts you want to run.</p>
-                        <p class="fragment roll-in">Configuration files.</p>
-                        <p class="fragment roll-in">Templates you want to include.</p>
-                        <p class="fragment roll-in">Dependencies and caches.</p>
-                        <p class="fragment roll-in">Sequence and parallel runs.</p>
-                        <p class="fragment roll-in">Automate, trigger or run manually.</p>
+                        <p class="fragment roll-in">We can skip the CI/CD part</p>
+                        <p class="fragment roll-in">It's not part of this presentation</p>
+                        <p class="fragment roll-in">We focus on the files only</p>
                         <aside class="notes">
-                            Scripts you want to run.<br>
-                            Configuration files.<br>
-                            Templates you want to include.<br>
-                            Dependencies and caches.<br>
-                            Sequence and parallel runs.<br>
-                            Automate, trigger or run manually.<br>
-                    </section>
-                </section>
-                <section>
-                    <section>
-                        <h3>2.2. Workshop</h3>
+                            We can skip the CI/CD part, because it's not part of this presentation.<br>
+                            We focus on the files only, because we want to store them in a Git repository.<br>
+                            Okay, we can alter them with the CI/CD pipelines, but it's not the main point.<br>
+                        </aside>
                     </section>
                 </section>
 
@@ -162,14 +224,11 @@
                         <h3>3. GitOps</h3>
 
                         <p class="fragment roll-in">
-                            <em>"GitOps uses Git repositories as a single source of truth to deliver infrastructure as code."
-                            </em>
+                            <em>"GitOps uses Git repositories as a single source of truth to deliver infrastructure as code."</em>
                         </p>
                         <aside class="notes">
                             GitOps is a way to do Kubernetes cluster management and application delivery.<br>
-                            It works by using Git as a single source of truth for declarative infrastructure and applications.<br>
-                            With Git at the center of your delivery pipelines, developers can make pull requests to accelerate
-                            and simplify application deployments and operations tasks to Kubernetes.<br>
+                            It works by using Git as a single source of truth for declarative infrastructure.<br>
                         </aside>
                     </section>
                     <section>
@@ -179,7 +238,7 @@
                             single source of truth
                         </p>
                         <aside class="notes">
-                            The main message is that Git is the single source of truth for the whole system.<br>
+                            The main message is that Git is the single source of truth for your whole system.<br>
                             Write down everything in Git, and the system will be consistent.<br>
                             The change management is also easier, because you can see the changes in the Git history.<br>
                         </aside>
@@ -195,8 +254,9 @@
                         <aside class="notes">
                             GitOps uses the same flow as the standard Git flow.<br>
                             Every change is visible, because it's in the Git history. Every change revertable, because it's in the Git history.<br>
-                            The system will be consistent across all environments, because the configuration mainly is the same.<br>
-                            The security is also increased, because you can see the changes in the Git history.<br>
+                            The system will be consistent across all environments, because the configuration mainly is the same, you can store the differences in different branches.<br>
+                            The security is also increased, because you can see and review the changes in the Git history as a pull request.<br>
+                            The flow based on the standard Git flow, so you can use the feature branches as well.<br>
                         </aside>
                     </section>
                     <section>
@@ -214,9 +274,10 @@
                             </em>
                         </p>
                         <aside class="notes">
-                            It follows the GitOps pattern of using Git repositories as the single source of truth for defining the desired application state.<br>
-                            Argo CD automates the deployment of the desired application states in the specified target environments.<br>
-                            And more...<br>
+                            It follows the GitOps pattern of using Git repositories as the single source of truth for defining the desired application
+                            state.<br>
+                            ArgoCD automates the deployment of the desired application states in the specified target environments.<br>
+                            The ArgoCD is the connection between the Git and the Kubernetes cluster, it synchronizes the desired state with the actual state and enforce it.<br>
                     </section>
                     <section>
                         <h3>4.1. What is it?</h3>
@@ -226,14 +287,36 @@
                         <p class="fragment roll-in">Apply or revert configuration changes.</p>
                         <p class="fragment roll-in">Templated configuration with different environments.</p>
                         <aside class="notes">
-                            Argo CD is a declarative, the Git contains the desired state of the application.<br>
+                            ArgoCD is a declarative, the Git contains the desired state of the application.<br>
                             Keeps the Git and the Kubernetes in sync, removes the unnecessary resources, creates the missing resources.<br>
                             Uses templated configuration, so you can use the same configuration in different environments.<br>
                             Even feature branches...<br>
                         </aside>
                     </section>
                     <section>
+                        <h3>4.2. What is it?</h3>
+
+                        <p class="fragment roll-in">ArgoCD is built on applications</p>
+                        <p class="fragment roll-in">Applications are defined in a Git repository</p>
+                        <p class="fragment roll-in">ArgoCD compares the actual state with the desired state</p>
+                        <p class="fragment roll-in">ArgoCD synchronizes the actual state with the desired state</p>
+                        <aside class="notes">
+                            ArgoCD is built on applications, and the applications are defined in a Git repository.<br>
+                            ArgoCD compares the actual state with the desired state, and synchronizes the actual state with the desired state.<br>
+                            And lots of other things, plugins, generators, etc...<br>
+                        </aside>
+                    </section>
+
+                    <section class="fragment">
                         <h3>4.2. Workshop</h3>
+
+
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h3>5. Summary, Q&amp;A</h3>
                     </section>
                 </section>
 
