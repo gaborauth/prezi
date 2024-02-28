@@ -55,16 +55,16 @@
                             <a href="https://kubernetes.io/">https://kubernetes.io/</a>
                         </p>
                         <p class="fragment roll-in">Google hobby-project</p>
-                        <p class="fragment roll-in">Open-source since 2014</p>
-                        <p class="fragment roll-in">Quasi-standard since 2020</p>
                         <p class="fragment roll-in">The name means “helmsman” or "ship pilot" in Greek</p>
+                        <p class="fragment roll-in">Open-source since 2014</p>
                         <p class="fragment roll-in">The configuration is declarative</p>
                         <aside class="notes">
                             Who uses Kubernetes? Hands up!<br>
                             So, Kubernetes is a container orchestration platform that automates the deployment, scaling, and management of containerized
                             applications.<br>
-                            It was originally designed by Google and is now maintained by the Cloud Native Computing Foundation.<br>
-                            The name Kubernetes originates from Greek, meaning helmsman or ship pilot. Google open-sourced the Kubernetes project in 2014.<br>
+                            It was originally designed by Google and is now maintained by the Cloud Native Computing Foundation. Google open-sourced the
+                            Kubernetes project in 2014.<br>
+                            The name Kubernetes originates from Greek, meaning helmsman or ship pilot.<br>
                             Kubernetes is a portable, extensible, open-source platform for managing containerized workloads and services, that facilitates both
                             declarative configuration and automation.<br>
                         </aside>
@@ -78,7 +78,8 @@
                         <p class="fragment roll-in">Load balancing</p>
                         <p class="fragment roll-in">Self-healing</p>
                         <aside class="notes">
-                            Service discovery and orchestration: Kubernetes can track your services real-time and automatically update DNS entries for them.<br>
+                            Service discovery and orchestration: Kubernetes can track your services real-time and automatically create or update the network for
+                            them.<br>
                             Automated rollout and rollback: Kubernetes can change the state of your application.<br>
                             Configuration management: Kubernetes can store and manage the whole configuration of your application.<br>
                             Health checks and rules: Kubernetes can check the health of your application and restart it if it's necessary.<br>
@@ -190,11 +191,11 @@
 
                 <section>
                     <section>
-                        <h3>2. GitLab and CI</h3>
+                        <h3>2. Gitlab and CI</h3>
 
                         <p class="fragment roll-in">
                             <em>
-                                "GitLab allows us to collaborate very well with team members and between different teams."
+                                "Gitlab allows us to collaborate very well with team members and between different teams."
                             </em>
                         </p>
                         <aside class="notes">
@@ -211,10 +212,12 @@
                         <p class="fragment roll-in">We can skip the CI/CD part</p>
                         <p class="fragment roll-in">It's not part of this presentation</p>
                         <p class="fragment roll-in">We focus on the files only</p>
+                        <p class="fragment roll-in">Also, we can use GitHub too</p>
                         <aside class="notes">
                             We can skip the CI/CD part, because it's not part of this presentation.<br>
                             We focus on the files only, because we want to store them in a Git repository.<br>
                             Okay, we can alter them with the CI/CD pipelines, but it's not the main point.<br>
+                            Also, we can use GitHub too, but I prefer GitLab.<br>
                         </aside>
                     </section>
                 </section>
@@ -254,13 +257,77 @@
                         <aside class="notes">
                             GitOps uses the same flow as the standard Git flow.<br>
                             Every change is visible, because it's in the Git history. Every change revertable, because it's in the Git history.<br>
-                            The system will be consistent across all environments, because the configuration mainly is the same, you can store the differences in different branches.<br>
+                            The system will be consistent across all environments, because the configuration mainly is the same, you can store the differences
+                            in different branches.<br>
                             The security is also increased, because you can see and review the changes in the Git history as a pull request.<br>
                             The flow based on the standard Git flow, so you can use the feature branches as well.<br>
                         </aside>
                     </section>
+
                     <section>
                         <h3>3.2. Little workshop</h3>
+
+                        <img src="20240228/gitops-0.png"></img>
+                        <aside class="notes">
+                            Let's see some examples.<br>
+                            So, we have a bunch of yaml files consists of the configuration of the demo application in the Kubernetes cluster.<br>
+                        </aside>
+                    </section>
+
+                    <section>
+                        <h3>3.2. Little workshop</h3>
+
+                        <img src="20240228/gitops-1.png"></img>
+                        <aside class="notes">
+                            The kustomization.yaml contains the customizable resources of the application.<br>
+                        </aside>
+                    </section>
+
+                    <section>
+                        <h3>3.2. Little workshop</h3>
+
+                        <img src="20240228/gitops-2.png"></img>
+                        <aside class="notes">
+                            The configmap.yaml contains the index.html file.<br>
+                        </aside>
+                    </section>
+
+                    <section>
+                        <h3>3.2. Little workshop</h3>
+
+                        <img src="20240228/gitops-3.png"></img>
+                        <aside class="notes">
+                            The ingress.yaml describe the ingress rules for the application.<br>
+                        </aside>
+                    </section>
+
+                    <section>
+                        <h3>3.2. Little workshop</h3>
+
+                        <img src="20240228/gitops-4.png"></img>
+                        <aside class="notes">
+                            The namespace.yaml is trivial, it contains the namespace of the application.<br>
+                        </aside>
+                    </section>
+
+                    <section>
+                        <h3>3.2. Little workshop</h3>
+
+                        <img src="20240228/gitops-5.png"></img>
+                        <aside class="notes">
+                            The deployment.yaml contains the deployment of the application.<br>
+                            It contains an nginx and a configmap reference to the index.html<br>
+                        </aside>
+                    </section>
+
+                    <section>
+                        <h3>3.2. Little workshop</h3>
+
+                        <img src="20240228/gitops-6.png"></img>
+                        <aside class="notes">
+                            The service.yaml contains the service of the application.<br>
+                            It contains a reference to the pod through the deployment.<br>
+                        </aside>
                     </section>
                 </section>
 
@@ -277,7 +344,8 @@
                             It follows the GitOps pattern of using Git repositories as the single source of truth for defining the desired application
                             state.<br>
                             ArgoCD automates the deployment of the desired application states in the specified target environments.<br>
-                            The ArgoCD is the connection between the Git and the Kubernetes cluster, it synchronizes the desired state with the actual state and enforce it.<br>
+                            The ArgoCD is the connection between the Git and the Kubernetes cluster, it synchronizes the desired state with the actual state and
+                            enforce it.<br>
                     </section>
                     <section>
                         <h3>4.1. What is it?</h3>
@@ -310,13 +378,159 @@
                     <section class="fragment">
                         <h3>4.2. Workshop</h3>
 
+                        <img src="20240228/argocd-0.png">
+                        <aside class="notes">
+                            The ArgoCD based on the applications, and the applications are defined in a Git repository.<br>
+                            The Git repository contains the configuration of the demo application in the Kubernetes cluster.<br>
+                        </aside>
+                    </section>
 
+                    <section class="fragment">
+                        <h3>4.2. Workshop</h3>
+
+                        <img src="20240228/argocd-1.png"></img>
+                        <aside class="notes">
+                            In the header, you can see the health status<br>
+                            The green heart means everything is okay.<br>
+                            You can see the sync status, the green circle means everything is the application is in sync with the Git repository.<br>
+                        </aside>
+                    </section>
+
+                    <section class="fragment">
+                        <h3>4.2. Workshop</h3>
+
+                        <img src="20240228/argocd-2.png"></img>
+                        <aside class="notes">
+                            In the body, you can see the map of the resources.<br>
+                            Namespaces, deployments, services, ingresses, etc.<br>
+                            The green hearts and green circles means everything is okay.<br>
+                        </aside>
                     </section>
                 </section>
 
                 <section>
                     <section>
-                        <h3>5. Summary, Q&amp;A</h3>
+                        <h3>5. Feature branch deploy</h3>
+
+                        <p class="fragment roll-in">Give a developer a test environment, and you make happy him for years.</p>
+                        <p class="fragment roll-in">Teach a developer to create test environments, and you make a hell for yourself forever.</p>
+                        <p class="fragment roll-in">What is the solution?</p>
+                        <p class="fragment roll-in">Automate it.</p>
+                        <aside class="notes">
+                            So, we have to give a developer a test environment, but we have to manage it somehow.<br>
+                            What is the solution? Automate it.<br>
+                            We can use ArgoCD for this purpose.<br>
+                        </aside>
+                    </section>
+
+                    <section>
+                        <h3>5.1. Feature branch deploy</h3>
+
+                        <p class="fragment roll-in">You have two main option to achieve this:</p>
+                        <p class="fragment roll-in">1. Set up the pull request generator</p>
+                        <p class="fragment roll-in">2. Use the kustomize</p>
+                        <aside class="notes">
+                            You have two main option to achieve this.<br>
+                            The first one is to set up the pull request generator in the ArgoCD.<br>
+                            The second one is to use the kustomize in the Git repository.<br>
+                        </aside>
+                    </section>
+
+                    <section>
+                        <h3>5.2. Pull request generator</h3>
+
+                        <p class="fragment roll-in">The pull request generator is a plugin for the ArgoCD</p>
+                        <p class="fragment roll-in">It checks the pull request</p>
+                        <p class="fragment roll-in">It creates a new application in the ArgoCD.</p>
+                        <p class="fragment roll-in">It deletes the application in the ArgoCD.</p>
+                        <aside class="notes">
+                            The pull request generator is a plugin for the ArgoCD.<br>
+                            It periodically checks the pull request in the Git repository.<br>
+                            If it finds a new pull request, it creates a new application in the ArgoCD.<br>
+                            If the pull request is closed, it deletes the application in the ArgoCD.<br>
+                        </aside>
+                    </section>
+
+                    <section>
+                        <h3>5.2. Pull request generator</h3>
+
+                        <p class="fragment roll-in">https://argo-cd.readthedocs.io/en/stable/operator-manual/applicationset/Generators-Pull-Request/</p>
+                        <p class="fragment roll-in">The upside is: full automation based on pull requests<br>
+                        <p class="fragment roll-in">The downside is: full automation based on pull requests<br>
+                        <p class="fragment roll-in">The downsides are: you let the Git flow to configure ArgoCD</p>
+                        <p class="fragment roll-in">The downsides are: hard to configure</p>
+                        <aside class="notes">
+                            It's well documented.<br>
+                            The upside is: full application automation based on pull requests<br>
+                            The downside is: full application automation based on pull requests<br>
+                            The downsides are: you let the Git flow to configure ArgoCD<br>
+                            The downsides are: hard to configure<br>
+                        </aside>
+                    </section>
+
+                    <section>
+                        <h3>5.2. Kustomize</h3>
+
+                        <p class="fragment roll-in">It is a configuration transformation tool</p>
+                        <p class="fragment roll-in">The kubectl supports since Kubernetes 1.14 (since 2019)</p>
+                        <p class="fragment roll-in">You can customize untemplated yaml files</p>
+                        <p class="fragment roll-in">It also can generate resources</p>
+                        <aside class="notes">
+                            Who uses kustomize? Hands up!<br>
+                            Built-in to the kubectl since Kubernetes 1.14 (since 2019).<br>
+                            Kustomize is a configuration transformation tool.<br>
+                            It lets you customize raw, template-free YAML files.<br>
+                            It also can generate resources, like configmaps or secrets.<br>
+                        </aside>
+                    </section>
+
+                    <section>
+                        <h3>5.2. Kustomize</h3>
+
+                        <p class="fragment roll-in">Two main parts are:</p>
+                        <p class="fragment roll-in">base</p>
+                        <p class="fragment roll-in">overlays</p>
+                        <aside class="notes">
+                            Kustomize has two main parts, the base and the overlays.<br>
+                            The base contains the main configuration of the application.<br>
+                            The overlays contain only the differences between the environments.<br>
+                        </aside>
+                    </section>
+
+                    <section>
+                        <h3>5.2. Kustomize</h3>
+
+                        <img src="20240228/kustomize-1.png"></img>
+                        <aside class="notes">
+                            In the base, we can see the ingress, the deployment, the service and the kustomize.yaml.<br>
+                        </aside>
+                    </section>
+
+                    <section>
+                        <h3>5.2. Kustomize</h3>
+
+                        <img src="20240228/kustomize-0.png"></img>
+                        <aside class="notes">
+                            In the overlays we can see the differences, in this case, between the environments.<br>
+                        </aside>
+                    </section>
+
+                    <section>
+                        <h3>5.2. Kustomize</h3>
+
+                        <img src="20240228/kustomize-2.png"></img>
+                        <aside class="notes">
+                            As I mentioned, in the overlays, we can see the differences between the environments.<br>
+                            In this case, we override the namespace, the custom index.html file and the host of the ingress rule.<br>
+                        </aside>
+                    </section>
+
+                    <section>
+                        <h3>5.3. Demo</h3>
+
+                        <aside class="notes">
+                            Let's see how ArgoCD creates and deletes the applications based on the content of the Git repository.<br>
+                        </aside>
                     </section>
                 </section>
 
