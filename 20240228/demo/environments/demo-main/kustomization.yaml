@@ -1,0 +1,18 @@
+resources:
+- ../../base/
+
+namespace: demo-main
+
+configMapGenerator:
+- name: index-html-configmap
+  files:
+  - index.html
+
+patches:
+  - patch: |-
+      - op: replace
+        path: /spec/rules/0/host
+        value: "demo-main.iotguru.dev"
+    target:
+      kind: Ingress
+      name: ingress
