@@ -39,7 +39,7 @@
 
                 <section>
                     <section>
-                        <h3>1. Bevezetés</h3>
+                        <h3>1. DevOps</h3>
                         <p class="fragment roll-in">
                             <img src="20240620/devops-fs8.png" style="width:40%;" alt="DevOpsQA">
                         </p>
@@ -129,17 +129,25 @@
                         <code class="fragment roll-in">kubectl create deployment --image nginx nginx</code><br>
                         <code class="fragment roll-in">kubectl get pods</code><br>
                         <code class="fragment roll-in">kubectl delete deployment nginx</code><br>
-                        <p class="fragment roll-in">Ops... ezt nem kellett volna...</p>
+                        <p class="fragment roll-in">Upsz... ezt nem kellett volna... :D</p>
                     </section>
 
                     <section>
                         <h3>2.3. YAML</h3>
 
-                        <p class="fragment roll-in">Tegyük az nginx cuccokat yaml fájlba</p>
+                        <p class="fragment roll-in">Tegyük a cuccokat .yaml fájlba:</p>
+                        <div class="fragment roll-in">
+                            <img src="20240620/pod-minimal.png"></img>
+                        </div>
+                    </section>
+
+                    <section>
+                        <h3>2.3. YAML</h3>
+
                         <code class="fragment roll-in">kubectl apply -f nginx.yaml</code><br>
                         <code class="fragment roll-in">kubectl get pods</code><br>
                         <code class="fragment roll-in">kubectl delete deployment nginx</code><br>
-                        <p class="fragment roll-in">Ops... semmi baj!</p>
+                        <p class="fragment roll-in">Upsz... semmi baj!</p>
                         <code class="fragment roll-in">kubectl apply -f nginx.yaml</code><br>
                         <code class="fragment roll-in">kubectl get pods</code><br>
                     </section>
@@ -183,18 +191,6 @@
                         <p class="fragment roll-in">Improved reliability with visibility</p>
                         <p class="fragment roll-in">Consistency across all environment</p>
                         <p class="fragment roll-in">Increased security</p>
-                    </section>
-
-                    <section>
-                        <h3>3.2. Példa alkalmazás</h3>
-
-                        <img src="20240620/gitops-0.png"></img>
-                    </section>
-
-                    <section>
-                        <h3>3.2. Példa alkalmazás</h3>
-
-                        <img src="20240620/gitops-1.png"></img>
                     </section>
 
                     <section>
@@ -268,8 +264,8 @@
 
                         <p class="fragment roll-in">ArgoCD alapja az 'application'</p>
                         <p class="fragment roll-in">Minden 'application' Git repóban van definiálva</p>
-                        <p class="fragment roll-in">Tart magánál egy Git repó replikát</p>
-                        <p class="fragment roll-in">Szinkronban tartja a Kubernetes állapotot a kívánt állapottal</p>
+                        <p class="fragment roll-in">Tart magánál egy Git repó replikát, ha a Git nem lenne elérhető</p>
+                        <p class="fragment roll-in">Szinkronban tartja a Kubernetes állapotot a letárolt állapottal</p>
                     </section>
                     <section>
                         <h3>4.2. Hogy néz ki?</h3>
@@ -294,10 +290,10 @@
                     <section>
                         <h3>5. ArgoCD újdonságok</h3>
 
-                        <p class="fragment roll-in">ArgCD base</p>
-                        <p class="fragment roll-in">ArgCD ApplicationSet generators</p>
-                        <p class="fragment roll-in">ArgCD plugins</p>
-                        <p class="fragment roll-in">ArgCD side projects</p>
+                        <p class="fragment roll-in">1. Argo CD base</p>
+                        <p class="fragment roll-in">2. Argo CD ApplicationSet generators</p>
+                        <p class="fragment roll-in">3. Argo CD plugins</p>
+                        <p class="fragment roll-in">4. Argo side projects</p>
                     </section>
 
                     <section>
@@ -306,45 +302,67 @@
                         <p class="fragment roll-in">KISS paradigma: keep-it-simple-stupid</p>
                         <p class="fragment roll-in">minimális fejlesztések</p>
                         <p class="fragment roll-in">kényelmi javítások</p>
+                        <p class="fragment roll-in">"Rancher"-pótlék</p>
                     </section>
 
                     <section>
-                        <h3>5.1.1. ArgoCD v2.4</h3>
+                        <h3>5.1.1. ArgoCD v2.4 - Web terminal</h3>
 
-                        <p class="fragment roll-in">sok breaking change</p>
-                        <p class="fragment roll-in">web terminal</p>
-                        <p class="fragment roll-in">OpenTelemetry tracing UI</p>
+                        <img src="20240620/24-terminal.png"></img>
                     </section>
 
                     <section>
-                        <h3>5.1.2. ArgoCD v2.5</h3>
+                        <h3>5.1.1. ArgoCD v2.4 - OpenTelemetry tracing</h3>
 
-                        <p class="fragment roll-in">server side apply</p>
-                        <p class="fragment roll-in">project level restrictions</p>
+                        <img src="20240620/24-ot.png"></img>
                     </section>
 
                     <section>
-                        <h3>5.1.3. ArgoCD v2.6</h3>
+                        <h3>5.1.2. ArgoCD v2.5 - Server side apply</h3>
 
-                        <p class="fragment roll-in">CM plugin paraméterezés UI</p>
-                        <p class="fragment roll-in">create namespace opció</p>
-                        <p class="fragment roll-in">multi-source (UI nélkül)</p>
-                        <p class="fragment roll-in">progresszív rollout</p>
+                        <img src="20240620/25-ssa.png"></img>
                     </section>
 
                     <section>
-                        <h3>5.1.4. ArgoCD v2.7</h3>
+                        <h3>5.1.2. ArgoCD v2.5 - Project restrictions</h3>
 
-                        <p class="fragment roll-in">új log viewer UI</p>
-                        <p class="fragment roll-in">readiness gate UI</p>
+                        <img src="20240620/25-plr.png"></img>
                     </section>
 
                     <section>
-                        <h3>5.1.5. ArgoCD v2.8</h3>
+                        <h3>5.1.3. ArgoCD v2.6 - Plugin parameters</h3>
 
-                        <p class="fragment roll-in">új ApplicationSet generator</p>
-                        <p class="fragment roll-in">create cron job UI</p>
-                        <p class="fragment roll-in">kinyitható pod lista UI</p>
+                        <img src="20240620/26-pcmp.png"></img>
+                    </section>
+
+                    <section>
+                        <h3>5.1.3. ArgoCD v2.6 - multi-source</h3>
+
+                        <img src="20240620/26-ms.png"></img>
+                    </section>
+
+                    <section>
+                        <h3>5.1.4. ArgoCD v2.7 - Log UI</h3>
+
+                        <img src="20240620/27-log.png"></img>
+                    </section>
+
+                    <section>
+                        <h3>5.1.4. ArgoCD v2.7 - Readinss gate UI</h3>
+
+                        <img src="20240620/27-rg.png"></img>
+                    </section>
+
+                    <section>
+                        <h3>5.1.5. ArgoCD v2.8 - Cronjob UI</h3>
+
+                        <img src="20240620/28-job.png"></img>
+                    </section>
+
+                    <section>
+                        <h3>5.1.5. ArgoCD v2.8 - Collapsible pod list</h3>
+
+                        <img src="20240620/28-fold.png"></img>
                     </section>
 
                     <section>
@@ -352,7 +370,6 @@
 
                         <p class="fragment roll-in">controller shards</p>
                         <p class="fragment roll-in">ignore ApplicationSet differences</p>
-                        <p class="fragment roll-in">feljavított Gitlab kapcsolat</p>
                     </section>
 
                     <section>
@@ -374,10 +391,10 @@
                     <section>
                         <h3>5.2. ArgoCD ApplicationSet generators</h3>
 
-                        <p class="fragment roll-in">list generator: target fixed list of clusters</p>
-                        <p class="fragment roll-in">cluster generator: create cluster connection base on lists</p>
+                        <p class="fragment roll-in">list generator: generate list of items</p>
+                        <p class="fragment roll-in">cluster generator: create cluster connections base on lists</p>
                         <p class="fragment roll-in">git generator: create application based on git structure</p>
-                        <p class="fragment roll-in">matrix generator: combine two other generator in matrix</p>
+                        <p class="fragment roll-in">matrix generator: combine two other generator in a matrix</p>
                     </section>
 
                     <section>
@@ -392,7 +409,7 @@
                     <section>
                         <h3>5.3. ArgoCD plugins</h3>
 
-                        <p class="fragment roll-in">Helm, Jsonnet, Kustomize</p>
+                        <p class="fragment roll-in">Helm, Kustomize and Jsonnet</p>
                         <p class="fragment roll-in">Config Management Plugins</p>
                         <p class="fragment roll-in">Sidecar telepíthetőek</p>
                     </section>
@@ -400,18 +417,18 @@
                     <section>
                         <h3>5.3. ArgoCD plugins</h3>
 
-                        <p class="fragment roll-in">Vault plugin - vault</p>
-                        <p class="fragment roll-in">Terrafor provider - terraform</p>
+                        <p class="fragment roll-in">Vault plugin</p>
+                        <p class="fragment roll-in">Terraform plugin</p>
                         <p class="fragment roll-in">sok egyéb közösségi plugin</p>
                     </section>
 
                     <section>
                         <h3>5.3. ArgoCD side projects</h3>
 
-                        <p class="fragment roll-in">Argo Workflow - workflow engine</p>
-                        <p class="fragment roll-in">Argo Rollouts - deployment tool (blue-green, canary, etc)</p>
+                        <p class="fragment roll-in">Argo Workflow - simple workflow engine</p>
+                        <p class="fragment roll-in">Argo Rollouts - deployment tools (blue-green, canary, etc.)</p>
                         <p class="fragment roll-in">Argo Image updater - image updater</p>
-                        <p class="fragment roll-in">Argo Autopilot - ArgoCD deployment</p>
+                        <p class="fragment roll-in">Argo Autopilot - ArgoCD installer</p>
                     </section>
                 </section>
 
