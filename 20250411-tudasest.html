@@ -1,0 +1,628 @@
+<html xmlns="http://www.w3.org/1999/html">
+    <head>
+        <title>Gitlab CI, ArgoCD, GitOps és Kubernetes</title>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+        <link rel="stylesheet" href="reveal.css">
+        <link rel="stylesheet" href="theme/beige.css" id="theme">
+        <style>
+            .fragment {
+                font-size: 90%;
+            }
+        </style>
+    </head>
+    <body class="is-preload">
+        <div class="reveal">
+            <div style="width: 95%;margin:0 auto;display:table;height:60px;">
+                <span style="max-height: 48px;display:table-cell;vertical-align:middle;padding-left:30px;">Tudásest &ndash; 2025. április 11.</span>
+            </div>
+            <hr style="margin:0;"/>
+            <section class="slides">
+                <section>
+                    <section>
+                        <h2>Gitlab CI, ArgoCD, GitOps és Kubernetes</h2>
+                        <h4 class="fragment roll-in"><strike>szop...</strike> tapasztalatok</h4>
+                        <p><small>Gábor AUTH (<a href="mailto:gabor.auth@iotguru.cloud">gabor.auth@iotguru.cloud</a>)</small></p>
+                    </section>
+
+                    <section>
+                        <h3>Agenda</h3>
+                        <p class="fragment roll-in">1. Kubernetes</p>
+                        <p class="fragment roll-in">2. Gitlab and CI</p>
+                        <p class="fragment roll-in">3. GitOps</p>
+                        <p class="fragment roll-in">4. ArgoCD</p>
+                        <p class="fragment roll-in">5. Feature branch deploy</p>
+                        <p class="fragment roll-in">6. Summary, Q&amp;A</p>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h2>Kubernetes, GitOps and ArgoCD</h2>
+                        <h4 class="fragment roll-in"><strike>sucks...</strike> <span class="fragment roll-in">experiences</span></h4>
+                        <p><small>Gábor AUTH (<a href="mailto:gabor.auth@iotguru.cloud">gabor.auth@iotguru.cloud</a>)</small></p>
+                    </section>
+
+                    <section>
+                        <h3>Agenda</h3>
+                        <p class="fragment roll-in">1. Kubernetes</p>
+                        <p class="fragment roll-in">2. Gitlab and CI</p>
+                        <p class="fragment roll-in">3. GitOps</p>
+                        <p class="fragment roll-in">4. ArgoCD</p>
+                        <p class="fragment roll-in">5. Feature branch deploy</p>
+                        <p class="fragment roll-in">6. Summary, Q&amp;A</p>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h3>1. Kubernetes</h3>
+                        <p class="fragment roll-in">
+                            <a href="https://kubernetes.io/">https://kubernetes.io/</a>
+                        </p>
+                        <p class="fragment roll-in">Google hobby-project</p>
+                        <p class="fragment roll-in">The name means “helmsman” or "ship pilot" in Greek</p>
+                        <p class="fragment roll-in">Open-source since 2014</p>
+                        <p class="fragment roll-in">The configuration is declarative</p>
+                        <aside class="notes">
+                            Who uses Kubernetes? Hands up!<br>
+                            So, in nutshell only.<br>
+                            So, Kubernetes is a container orchestration platform that automates the deployment, scaling, and management of containerized
+                            applications.<br>
+                            The name Kubernetes originates from Greek, meaning helmsman or ship pilot.<br>
+                            It was originally designed by Google and is now maintained by the Cloud Native Computing Foundation. Google open-sourced the
+                            Kubernetes project ten year ago.<br>
+                            The configuration is declarative, so you can define what you want, instead of how you want it.<br>
+                        </aside>
+                    </section>
+                    <section>
+                        <h3>1.1. What is it?</h3>
+                        <p class="fragment roll-in">Service discovery & orchestration</p>
+                        <p class="fragment roll-in">Automated rollout and rollback</p>
+                        <p class="fragment roll-in">Configuration management</p>
+                        <p class="fragment roll-in">Health checks & rules</p>
+                        <p class="fragment roll-in">Load balancing</p>
+                        <p class="fragment roll-in">Self-healing</p>
+                        <aside class="notes">
+                            Service discovery and orchestration: Kubernetes can track your services real-time and automatically create or update the network for
+                            them.<br>
+                            Automated rollout and rollback: Kubernetes can change the state of your application.<br>
+                            Configuration management: Kubernetes can store and manage the whole configuration of your application.<br>
+                            Health checks and rules: Kubernetes can check the health of your application and restart it if it's necessary.<br>
+                            Load balancing: Kubernetes provides load balancers and proxies for your application.<br>
+                            Self-healing: Kubernetes can heal itself if something goes wrong. It's really unstoppable.<br>
+                        </aside>
+                    </section>
+                    <section>
+                        <h3>1.1. What is it?</h3>
+
+                        <div class="fragment roll-in">
+                            <img src="https://d33wubrfki0l68.cloudfront.net/2475489eaf20163ec0f54ddc1d92aa8d4c87c96b/e7c81/images/docs/components-of-kubernetes.svg"></img>
+                        </div>
+                        <aside class="notes">
+                            Main parts of the Kubernetes cluster are the control plane and the worker nodes.<br>
+                            The control plane is responsible for managing the cluster.<br>
+                            The worker nodes are responsible for running the actual applications.<br>
+                            It's a little bit more complicated, and the configuration is painful, but it's worth it.<br>
+                        </aside>
+                    </section>
+
+                    <section>
+                        <h3>1.2. CLI and API</h3>
+
+                        <p class="fragment roll-in">Full-featured API via kubectl</p>
+                        <p class="fragment roll-in">Create, delete, update, scale, etc.</p>
+                        <p class="fragment roll-in">Pods, services, deployments, etc.</p>
+                        <p class="fragment roll-in">Ingress, network policies, etc.</p>
+                        <p class="fragment roll-in">ConfigMaps, secrets, etc.</p>
+                        <p class="fragment roll-in">...and more</p>
+                        <aside class="notes">
+                            kubectl is the main tool to interact with the Kubernetes cluster.<br>
+                            You can create, delete, update, scale, etc. with it.<br>
+                            You can manage pods, services, deployments, etc.<br>
+                            You can manage ingress, network policies, etc.<br>
+                            You can manage ConfigMaps, secrets, etc.<br>
+                            ...and more<br>
+                        </aside>
+                    </section>
+
+                    <section>
+                        <h3>1.3. CLI and API</h3>
+
+                        <p class="fragment roll-in">The Kubernetes cluster persists the desired state</p>
+                        <p class="fragment roll-in">It will try to reach the desired state</p>
+                        <p class="fragment roll-in">It will heal itself if something goes wrong</p>
+                        <p class="fragment roll-in">BUT you can hurt it</p>
+                        <aside class="notes">
+                            The Kubernetes cluster persists the desired state of the system.<br>
+                            It will try to reach the desired state, and it will heal itself if something goes wrong.<br>
+                            But you can hurt it easily, you can delete almost the whole cluster with one command.<br>
+                        </aside>
+                    </section>
+
+                    <section>
+                        <h3>1.3. Little workshop</h3>
+
+                        <code class="fragment roll-in">kubectl get pods</code><br>
+                        <code class="fragment roll-in">kubectl create deployment --image nginx nginx</code><br>
+                        <code class="fragment roll-in">kubectl get pods</code><br>
+                        <code class="fragment roll-in">kubectl delete deployment nginx</code><br>
+                        <p class="fragment roll-in">Ups... wrong command...</p>
+                        <aside class="notes">
+                            Let's see some examples.<br>
+                            First, we will list the pods in the cluster.<br>
+                            Then we will create a deployment with the nginx image.<br>
+                            We will list the pods again. We will see the nginx pod.<br>
+                            Then we will delete the deployment.<br>
+                            Ups... we don't want to delete the whole deployment, but accidentally we did it.<br>
+                        </aside>
+                    </section>
+
+                    <section>
+                        <h3>1.3. Little workshop</h3>
+
+                        <p class="fragment roll-in">Store our nginx in a yaml file</p>
+                        <code class="fragment roll-in">kubectl apply -f nginx.yaml</code><br>
+                        <code class="fragment roll-in">kubectl get pods</code><br>
+                        <code class="fragment roll-in">kubectl delete deployment nginx</code><br>
+                        <p class="fragment roll-in">Ups... wrong command, but never mind!</p>
+                        <code class="fragment roll-in">kubectl apply -f nginx.yaml</code><br>
+                        <code class="fragment roll-in">kubectl get pods</code><br>
+                        <aside class="notes">
+                            Let's see some other examples.<br>
+                            First, we will store our nginx deployment in a yaml file.<br>
+                            Then we will apply the yaml file to the cluster.<br>
+                            We will list the pods again.<br>
+                            Then we will delete the deployment.<br>
+                            Ups... we don't want to delete the whole deployment, but accidentally we did it.<br>
+                            Never mind, then we will apply again the yaml file.<br>
+                            We will list the pods again, so we are happy.<br>
+                        </aside>
+                    </section>
+
+                    <section>
+                        <h3>1.3. Little workshop</h3>
+
+                        <p class="fragment roll-in">Where can we store these yaml files?</p>
+                        <p class="fragment roll-in">How can we manage the yaml files?</p>
+                        <p class="fragment roll-in">How can we manage the configuration?</p>
+                        <p class="fragment roll-in">This point where the GitOps comes in!</p>
+                        <aside class="notes">
+                            Locally? In the cloud? In the cluster? On the control plane?<br>
+                            Who can access these files? Who can modify these files?<br>
+                            How can we manage the configuration? How can we manage the changes?<br>
+                            Can we forget to apply the yaml file to the cluster? Can we apply the wrong yaml file to the cluster?<br>
+                            This point where the GitOps comes in! Store them in a Git repository.<br>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h3>2. Gitlab and CI</h3>
+
+                        <p class="fragment roll-in">
+                            <em>
+                                "Gitlab allows us to collaborate very well with team members and between different teams."
+                            </em>
+                        </p>
+                        <aside class="notes">
+                            Who uses GitLab? Hands up!<br>
+                            GitLab is a web-based DevOps lifecycle tool that provides a Git repository, wiki, issue-tracking and CI/CD pipeline features, using
+                            an open-source license.<br>
+                            The CI part aims to provide build automation, test automation, pipeline config management, artifact storage, and pipeline
+                            security.<br>
+                        </aside>
+                    </section>
+                    <section>
+                        <h3>2.1. What is it?</h3>
+
+                        <p class="fragment roll-in">We will skip the CI/CD part</p>
+                        <p class="fragment roll-in">It's not part of this presentation</p>
+                        <p class="fragment roll-in">We focus on the files only</p>
+                        <p class="fragment roll-in">Also, we can use GitHub too</p>
+                        <aside class="notes">
+                            We will skip the CI/CD part, because it's not part of this presentation.<br>
+                            We focus on the files only, because we want to store them in a Git repository.<br>
+                            Okay, we can alter them with the CI/CD pipelines, but it's not the main point.<br>
+                            Also, we can use GitHub too for this, so, it's not a big deal.<br>
+                        </aside>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h3>3. GitOps</h3>
+
+                        <p class="fragment roll-in">
+                            <em>"GitOps uses Git repositories as a single source of truth to deliver infrastructure as code."</em>
+                        </p>
+                        <aside class="notes">
+                            GitOps is a way to do Kubernetes cluster management in right way.<br>
+                            It works by using Git as a single source of truth for declarative infrastructure.<br>
+                        </aside>
+                    </section>
+                    <section>
+                        <h3>3. GitOps</h3>
+
+                        <p class="fragment roll-in">
+                            single source of truth
+                        </p>
+                        <aside class="notes">
+                            The main message is that Git is the single source of truth for your whole system.<br>
+                            Write down everything in Git, and the system will be consistent.<br>
+                            The change management is also easier, because you can see the changes in the Git history.<br>
+                        </aside>
+                    </section>
+
+                    <section>
+                        <h3>3.1. What is it?</h3>
+
+                        <p class="fragment roll-in">Standard workflow</p>
+                        <p class="fragment roll-in">Improved reliability with visibility</p>
+                        <p class="fragment roll-in">Consistency across all environment</p>
+                        <p class="fragment roll-in">Increased security</p>
+                        <aside class="notes">
+                            GitOps uses the same flow as the standard Git flow.<br>
+                            Every change is visible, because it's in the Git history. Every change revertable, because it's in the Git history.<br>
+                            The system will be consistent across all environments, because the configuration mainly is the same, you can store the differences
+                            in different branches.<br>
+                            The security is also increased, because you can see and review the changes in the Git history as a pull request.<br>
+                            The flow based on the standard Git flow, so you can use the feature branches as well.<br>
+                        </aside>
+                    </section>
+
+                    <section>
+                        <h3>3.2. Little workshop</h3>
+
+                        <img src="20240228/gitops-0.png"></img>
+                        <aside class="notes">
+                            Let's see some examples.<br>
+                            So, we have a bunch of yaml files consists of the configuration of the demo application in the Kubernetes cluster.<br>
+                        </aside>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h3>4. ArgoCD</h3>
+
+                        <p class="fragment roll-in">
+                            <em>
+                                "Argo CD is a declarative, GitOps continuous delivery tool for Kubernetes."
+                            </em>
+                        </p>
+                        <aside class="notes">
+                            It is the missing chain between the Git and the Kubernetes cluster.<br>
+                            The ArgoCD is the connection between the Git and the Kubernetes cluster, it synchronizes the desired state with the actual state and
+                            enforce it.<br>
+                            It follows the GitOps pattern of using Git repositories as the single source of truth for defining the desired application
+                            state.<br>
+                            ArgoCD automates the deployment of the desired application states in the specified target environments.<br>
+                        </aside>
+                    </section>
+                    <section>
+                        <h3>4.1. What is it?</h3>
+
+                        <p class="fragment roll-in">Create clusters with a known state.</p>
+                        <p class="fragment roll-in">Recover or recreate applications.</p>
+                        <p class="fragment roll-in">Apply or revert configuration changes.</p>
+                        <p class="fragment roll-in">Templated configuration with different environments.</p>
+                        <aside class="notes">
+                            ArgoCD is also declarative, and the Git contains the desired state of the application.<br>
+                            Keeps the Git and the Kubernetes in sync, removes the unnecessary resources, creates the missing resources.<br>
+                            Uses templated configuration, so you can use the same configuration in different environments.<br>
+                            Even feature branches...<br>
+                        </aside>
+                    </section>
+                    <section>
+                        <h3>4.2. What is it?</h3>
+
+                        <p class="fragment roll-in">ArgoCD is built on applications</p>
+                        <p class="fragment roll-in">Applications are defined in a Git repository</p>
+                        <p class="fragment roll-in">ArgoCD compares the actual state with the desired state</p>
+                        <p class="fragment roll-in">ArgoCD synchronizes the actual state with the desired state</p>
+                        <aside class="notes">
+                            ArgoCD is built on applications, and the applications are defined in a Git repository.<br>
+                            ArgoCD compares the actual state with the desired state, and synchronizes the actual state with the desired state.<br>
+                            And lots of other things, plugins, generators, etc...<br>
+                        </aside>
+                    </section>
+
+                    <section>
+                        <h3>4.2. Workshop</h3>
+                    </section>
+
+                <section>
+                    <section>
+                        <h3>5. Feature branch deploy</h3>
+
+                        <p class="fragment roll-in">Give a developer one test environment, and you make happy him for years.</p>
+                        <p class="fragment roll-in">Teach a developer to create test environments, and you make a hell for yourself forever.</p>
+                        <p class="fragment roll-in">What is the solution?</p>
+                        <p class="fragment roll-in">Automate it.</p>
+                        <aside class="notes">
+                            So, we have to give a developer a test environment, but we have to manage it somehow.<br>
+                            What is the solution? Automate it.<br>
+                            We can use ArgoCD for this purpose.<br>
+                        </aside>
+                    </section>
+
+                    <section>
+                        <h3>5.1. Feature branch deploy</h3>
+
+                        <p class="fragment roll-in">You have two main option to achieve this:</p>
+                        <p class="fragment roll-in">1. Set up the pull request generator</p>
+                        <p class="fragment roll-in">2. Use the kustomize</p>
+                        <aside class="notes">
+                            You have two main option to achieve this.<br>
+                            The first one is to set up the pull request generator in the ArgoCD.<br>
+                            The second one is to use the kustomize in the Git repository.<br>
+                        </aside>
+                    </section>
+
+                    <section>
+                        <h3>5.2. Pull request generator</h3>
+
+                        <p class="fragment roll-in">The pull request generator is a plugin for the ArgoCD</p>
+                        <p class="fragment roll-in">It checks the pull request</p>
+                        <p class="fragment roll-in">It creates a new application in the ArgoCD.</p>
+                        <p class="fragment roll-in">It deletes the application in the ArgoCD.</p>
+                        <aside class="notes">
+                            The pull request generator is a plugin for the ArgoCD.<br>
+                            It periodically checks the pull request in the Git repository.<br>
+                            If it finds a new pull request, it creates a new application in the ArgoCD.<br>
+                            If the pull request is closed, it deletes the application in the ArgoCD.<br>
+                        </aside>
+                    </section>
+
+                    <section>
+                        <h3>5.2. Pull request generator</h3>
+
+                        <p class="fragment roll-in">https://argo-cd.readthedocs.io/en/stable/operator-manual/applicationset/Generators-Pull-Request/</p>
+                        <p class="fragment roll-in">The upside is: full automation based on pull requests<br>
+                        <p class="fragment roll-in">The downside is: full automation based on pull requests<br>
+                        <p class="fragment roll-in">The downsides are: you let the Git flow to configure ArgoCD</p>
+                        <p class="fragment roll-in">The downsides are: hard to configure</p>
+                        <p class="fragment roll-in">The downsides are: supports only small or individual projects</p>
+                        <aside class="notes">
+                            It's well documented.<br>
+                            The upside is: full application automation based on pull requests<br>
+                            The downside is: full application automation based on pull requests<br>
+                            The downsides are: you let the Git flow to configure ArgoCD<br>
+                            The downsides are: hard to configure<br>
+                            The downsides are: supports only small or individual projects<br>
+                        </aside>
+                    </section>
+
+                    <section>
+                        <h3>5.2. Kustomize</h3>
+
+                        <p class="fragment roll-in">It is a configuration transformation tool</p>
+                        <p class="fragment roll-in">The kubectl supports since Kubernetes 1.14 (since 2019)</p>
+                        <p class="fragment roll-in">You can customize untemplated yaml files</p>
+                        <p class="fragment roll-in">It also can generate resources</p>
+                        <aside class="notes">
+                            Who uses kustomize? Hands up!<br>
+                            Built-in to the kubectl since Kubernetes 1.14 (since 2019).<br>
+                            Kustomize is a configuration transformation tool.<br>
+                            It lets you customize raw, template-free YAML files.<br>
+                            It also can generate resources, like configmaps or secrets.<br>
+                        </aside>
+                    </section>
+
+                    <section>
+                        <h3>5.2. Kustomize</h3>
+
+                        <p class="fragment roll-in">Two main parts are:</p>
+                        <p class="fragment roll-in">base</p>
+                        <p class="fragment roll-in">overlays</p>
+                        <aside class="notes">
+                            Kustomize has two main parts, the base and the overlays.<br>
+                            The base contains the main and common configuration of the application.<br>
+                            The overlays contain only the differences between the environments.<br>
+                        </aside>
+                    </section>
+
+                    <section>
+                        <h3>5.2. Kustomize</h3>
+
+                        <img src="20240228/kustomize-1.png"></img>
+                        <aside class="notes">
+                            In the base, we can see the ingress, the deployment, the service and the kustomize.yaml.<br>
+                        </aside>
+                    </section>
+
+                    <section>
+                        <h3>5.2. Kustomize</h3>
+
+                        <img src="20240228/kustomize-0.png"></img>
+                        <aside class="notes">
+                            In the overlays we can see the differences, in this case, between the environments.<br>
+                        </aside>
+                    </section>
+
+                    <section>
+                        <h3>5.2. Kustomize</h3>
+
+                        <img src="20240228/kustomize-2.png"></img>
+                        <aside class="notes">
+                            As I mentioned, in the overlays, we can see the differences between the environments.<br>
+                            In this case, we override the namespace, the custom index.html file and the host of the ingress rule.<br>
+                        </aside>
+                    </section>
+
+                    <section>
+                        <h3>5.3. Demo</h3>
+
+                        <p class="fragment roll-in">https://github.com/gaborauth/prezi/tree/master/20240228/demo</p>
+                        <p class="fragment roll-in">Let's see how ArgoCD creates and deletes the resources based on the content of the Git repository.</p>
+                        <aside class="notes">
+                            Let's see how ArgoCD creates and deletes the resources based on the content of the Git repository.<br>
+                        </aside>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h3>6. Summary, Q&amp;A</h3>
+                    </section>
+                </section>
+
+
+                <section>
+                    <section>
+                        <h3>1.1. DevOps CI/CD loop</h3>
+                        <div style="position:relative;width:900px;height:412px;margin:0 auto;">
+                            <img class="fragment current-visible fade-in" src="20230913/devops-loop.png"
+                                 style="width:100%;height:100%;position:absolute;top:0;left:0;" alt="DevOps loop">
+                            <img class="fragment current-visible fade-in" src="20230913/devops-loop-1.png"
+                                 style="width:100%;height:100%;position:absolute;top:0;left:0;" alt="DevOps loop">
+                            <img class="fragment current-visible fade-in" src="20230913/devops-loop-2.png"
+                                 style="width:100%;height:100%;position:absolute;top:0;left:0;" alt="DevOps loop">
+                            <img class="fragment current-visible fade-in" src="20230913/devops-loop-3.png"
+                                 style="width:100%;height:100%;position:absolute;top:0;left:0;" alt="DevOps loop">
+                        </div>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h3>2. Kubernetes</h3>
+                        <p class="fragment roll-in">
+                            <a href="https://kubernetes.io/">https://kubernetes.io/</a>
+                        </p>
+                        <p class="fragment roll-in">Google hobby-projekt</p>
+                        <p class="fragment roll-in">Nyílt forrású 2014 óta</p>
+                        <p class="fragment roll-in">2020 óta kvázi szabvány</p>
+                        <p class="fragment roll-in">A neve “kormányos” görögül</p>
+                        <p class="fragment roll-in">Deklaratív konfiguráció</p>
+                    </section>
+                    <section>
+                        <h3>2.1. Mi is ez?</h3>
+                        <p class="fragment roll-in">Service discovery & orchestration</p>
+                        <p class="fragment roll-in">Automated rollout and rollback</p>
+                        <p class="fragment roll-in">Configuration management</p>
+                        <p class="fragment roll-in">Health checks & rules</p>
+                        <p class="fragment roll-in">Load balancing</p>
+                        <p class="fragment roll-in">Self-healing</p>
+                    </section>
+                    <section>
+                        <h3>2.1. Mi is ez?</h3>
+
+                        <div class="fragment roll-in">
+                            <img src="https://d33wubrfki0l68.cloudfront.net/2475489eaf20163ec0f54ddc1d92aa8d4c87c96b/e7c81/images/docs/components-of-kubernetes.svg"></img>
+                        </div>
+                    </section>
+
+                    <section>
+                        <h3>2.2. Workshop</h3>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h3>3. GitOps</h3>
+
+                        <p class="fragment roll-in">
+                            <em>"GitOps uses Git repositories as a single source of truth to deliver infrastructure as code."
+                            </em>
+                        </p>
+                    </section>
+                    <section>
+                        <h3>3.1. Mi is ez?</h3>
+
+                        <p class="fragment roll-in">Standard workflow</p>
+                        <p class="fragment roll-in">Improved reliability with visibility</p>
+                        <p class="fragment roll-in">Consistency across all environment</p>
+                        <p class="fragment roll-in">Increased security</p>
+                    </section>
+                    <section>
+                        <h3>3.2. Workshop</h3>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h3>4. ArgoCD</h3>
+
+                        <p class="fragment roll-in">
+                            <em>
+                                "Argo CD is a declarative, GitOps continuous delivery tool for Kubernetes."
+                            </em>
+                        </p>
+                    </section>
+                    <section>
+                        <h3>4.1. Mi is ez?</h3>
+
+                        <p class="fragment roll-in">Create clusters with a known state.</p>
+                        <p class="fragment roll-in">Recover or recreate applications.</p>
+                        <p class="fragment roll-in">Apply or revert configuration changes.</p>
+                        <p class="fragment roll-in">Templated configuration with different environments.</p>
+                    </section>
+                    <section>
+                        <h3>4.2. Workshop</h3>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h3>5. GitLab CI</h3>
+
+                        <p class="fragment roll-in">
+                            <em>
+                                "It aims to provide build automation, test automation, pipeline config management, artifact storage, and pipeline security."
+                            </em>
+                        </p>
+                    </section>
+                    <section>
+                        <h3>5.1. Mi is ez?</h3>
+
+                        <p class="fragment roll-in">
+                            A Runner is an application that runs jobs in a pipeline.
+                        </p>
+                        <p class="fragment roll-in">
+                            It's simple, everything is in the .gitlab-ci.yaml
+                        </p>
+                        <p class="fragment roll-in">
+                            ...or templates, or includes, or... nowadays, it's complicated.
+                        </p>
+                    </section>
+                    <section>
+                        <h3>5.1. Mi is ez?</h3>
+
+                        <p class="fragment roll-in">Scripts you want to run.</p>
+                        <p class="fragment roll-in">Configuration files.</p>
+                        <p class="fragment roll-in">Templates you want to include.</p>
+                        <p class="fragment roll-in">Dependencies and caches.</p>
+                        <p class="fragment roll-in">Sequence and parallel runs.</p>
+                        <p class="fragment roll-in">Automate, trigger or run manually.</p>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h3>5.2. Workshop</h3>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h3>6. Összegzés, Q&amp;A</h3>
+                        <p><a href="20230913/dev-ci.yaml">dev-ci.yaml</a></p>
+                        <p><a href="20230913/ops-ci.yaml">ops-ci.yaml</a></p>
+                        <p><a href="https://gitlab.iotguru.dev/devops/pipelines/">pipeline templates</a></p>
+                    </section>
+                </section>
+            </section>
+        </div>
+        <script src="reveal.js"></script>
+        <script>
+            Reveal.initialize({
+                controls: true,
+                progress: true,
+                history: true,
+                center: true,
+                slideNumber: true,
+                transition: 'zoom'
+            });
+        </script>
+    </body>
+</html>
