@@ -312,6 +312,7 @@
                     <section>
                         <h3>4.2. Workshop</h3>
                     </section>
+                </section>
 
                 <section>
                     <section>
@@ -392,50 +393,8 @@
                     </section>
 
                     <section>
-                        <h3>5.2. Kustomize</h3>
-
-                        <p class="fragment roll-in">Two main parts are:</p>
-                        <p class="fragment roll-in">base</p>
-                        <p class="fragment roll-in">overlays</p>
-                        <aside class="notes">
-                            Kustomize has two main parts, the base and the overlays.<br>
-                            The base contains the main and common configuration of the application.<br>
-                            The overlays contain only the differences between the environments.<br>
-                        </aside>
-                    </section>
-
-                    <section>
-                        <h3>5.2. Kustomize</h3>
-
-                        <img src="20240228/kustomize-1.png"></img>
-                        <aside class="notes">
-                            In the base, we can see the ingress, the deployment, the service and the kustomize.yaml.<br>
-                        </aside>
-                    </section>
-
-                    <section>
-                        <h3>5.2. Kustomize</h3>
-
-                        <img src="20240228/kustomize-0.png"></img>
-                        <aside class="notes">
-                            In the overlays we can see the differences, in this case, between the environments.<br>
-                        </aside>
-                    </section>
-
-                    <section>
-                        <h3>5.2. Kustomize</h3>
-
-                        <img src="20240228/kustomize-2.png"></img>
-                        <aside class="notes">
-                            As I mentioned, in the overlays, we can see the differences between the environments.<br>
-                            In this case, we override the namespace, the custom index.html file and the host of the ingress rule.<br>
-                        </aside>
-                    </section>
-
-                    <section>
                         <h3>5.3. Demo</h3>
 
-                        <p class="fragment roll-in">https://github.com/gaborauth/prezi/tree/master/20240228/demo</p>
                         <p class="fragment roll-in">Let's see how ArgoCD creates and deletes the resources based on the content of the Git repository.</p>
                         <aside class="notes">
                             Let's see how ArgoCD creates and deletes the resources based on the content of the Git repository.<br>
@@ -446,150 +405,6 @@
                 <section>
                     <section>
                         <h3>6. Summary, Q&amp;A</h3>
-                    </section>
-                </section>
-
-
-                <section>
-                    <section>
-                        <h3>1.1. DevOps CI/CD loop</h3>
-                        <div style="position:relative;width:900px;height:412px;margin:0 auto;">
-                            <img class="fragment current-visible fade-in" src="20230913/devops-loop.png"
-                                 style="width:100%;height:100%;position:absolute;top:0;left:0;" alt="DevOps loop">
-                            <img class="fragment current-visible fade-in" src="20230913/devops-loop-1.png"
-                                 style="width:100%;height:100%;position:absolute;top:0;left:0;" alt="DevOps loop">
-                            <img class="fragment current-visible fade-in" src="20230913/devops-loop-2.png"
-                                 style="width:100%;height:100%;position:absolute;top:0;left:0;" alt="DevOps loop">
-                            <img class="fragment current-visible fade-in" src="20230913/devops-loop-3.png"
-                                 style="width:100%;height:100%;position:absolute;top:0;left:0;" alt="DevOps loop">
-                        </div>
-                    </section>
-                </section>
-
-                <section>
-                    <section>
-                        <h3>2. Kubernetes</h3>
-                        <p class="fragment roll-in">
-                            <a href="https://kubernetes.io/">https://kubernetes.io/</a>
-                        </p>
-                        <p class="fragment roll-in">Google hobby-projekt</p>
-                        <p class="fragment roll-in">Nyílt forrású 2014 óta</p>
-                        <p class="fragment roll-in">2020 óta kvázi szabvány</p>
-                        <p class="fragment roll-in">A neve “kormányos” görögül</p>
-                        <p class="fragment roll-in">Deklaratív konfiguráció</p>
-                    </section>
-                    <section>
-                        <h3>2.1. Mi is ez?</h3>
-                        <p class="fragment roll-in">Service discovery & orchestration</p>
-                        <p class="fragment roll-in">Automated rollout and rollback</p>
-                        <p class="fragment roll-in">Configuration management</p>
-                        <p class="fragment roll-in">Health checks & rules</p>
-                        <p class="fragment roll-in">Load balancing</p>
-                        <p class="fragment roll-in">Self-healing</p>
-                    </section>
-                    <section>
-                        <h3>2.1. Mi is ez?</h3>
-
-                        <div class="fragment roll-in">
-                            <img src="https://d33wubrfki0l68.cloudfront.net/2475489eaf20163ec0f54ddc1d92aa8d4c87c96b/e7c81/images/docs/components-of-kubernetes.svg"></img>
-                        </div>
-                    </section>
-
-                    <section>
-                        <h3>2.2. Workshop</h3>
-                    </section>
-                </section>
-
-                <section>
-                    <section>
-                        <h3>3. GitOps</h3>
-
-                        <p class="fragment roll-in">
-                            <em>"GitOps uses Git repositories as a single source of truth to deliver infrastructure as code."
-                            </em>
-                        </p>
-                    </section>
-                    <section>
-                        <h3>3.1. Mi is ez?</h3>
-
-                        <p class="fragment roll-in">Standard workflow</p>
-                        <p class="fragment roll-in">Improved reliability with visibility</p>
-                        <p class="fragment roll-in">Consistency across all environment</p>
-                        <p class="fragment roll-in">Increased security</p>
-                    </section>
-                    <section>
-                        <h3>3.2. Workshop</h3>
-                    </section>
-                </section>
-
-                <section>
-                    <section>
-                        <h3>4. ArgoCD</h3>
-
-                        <p class="fragment roll-in">
-                            <em>
-                                "Argo CD is a declarative, GitOps continuous delivery tool for Kubernetes."
-                            </em>
-                        </p>
-                    </section>
-                    <section>
-                        <h3>4.1. Mi is ez?</h3>
-
-                        <p class="fragment roll-in">Create clusters with a known state.</p>
-                        <p class="fragment roll-in">Recover or recreate applications.</p>
-                        <p class="fragment roll-in">Apply or revert configuration changes.</p>
-                        <p class="fragment roll-in">Templated configuration with different environments.</p>
-                    </section>
-                    <section>
-                        <h3>4.2. Workshop</h3>
-                    </section>
-                </section>
-
-                <section>
-                    <section>
-                        <h3>5. GitLab CI</h3>
-
-                        <p class="fragment roll-in">
-                            <em>
-                                "It aims to provide build automation, test automation, pipeline config management, artifact storage, and pipeline security."
-                            </em>
-                        </p>
-                    </section>
-                    <section>
-                        <h3>5.1. Mi is ez?</h3>
-
-                        <p class="fragment roll-in">
-                            A Runner is an application that runs jobs in a pipeline.
-                        </p>
-                        <p class="fragment roll-in">
-                            It's simple, everything is in the .gitlab-ci.yaml
-                        </p>
-                        <p class="fragment roll-in">
-                            ...or templates, or includes, or... nowadays, it's complicated.
-                        </p>
-                    </section>
-                    <section>
-                        <h3>5.1. Mi is ez?</h3>
-
-                        <p class="fragment roll-in">Scripts you want to run.</p>
-                        <p class="fragment roll-in">Configuration files.</p>
-                        <p class="fragment roll-in">Templates you want to include.</p>
-                        <p class="fragment roll-in">Dependencies and caches.</p>
-                        <p class="fragment roll-in">Sequence and parallel runs.</p>
-                        <p class="fragment roll-in">Automate, trigger or run manually.</p>
-                    </section>
-                </section>
-                <section>
-                    <section>
-                        <h3>5.2. Workshop</h3>
-                    </section>
-                </section>
-                <section>
-                    <section>
-                        <h3>6. Összegzés, Q&amp;A</h3>
-                        <p><a href="20230913/dev-ci.yaml">dev-ci.yaml</a></p>
-                        <p><a href="20230913/ops-ci.yaml">ops-ci.yaml</a></p>
-                        <p><a href="https://gitlab.iotguru.dev/devops/pipelines/">pipeline templates</a></p>
                     </section>
                 </section>
             </section>
